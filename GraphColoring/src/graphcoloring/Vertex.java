@@ -1,14 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package graphcoloring;
+
+import java.util.List;
 
 /**
  *
  * @author p1401687
  */
 public class Vertex {
+    
+    private List<Vertex> _lNeighbour;
+    private String _color;
+
+    public Vertex() {
+        
+    }
+
+    public String getColor() {
+        return _color;
+    }
+
+    public void setColor(String color) {
+        this._color = color;
+    }
     
 }
