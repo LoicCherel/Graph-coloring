@@ -10,6 +10,7 @@ public class Vertex {
     
     private List<Vertex> _lNeighbour;
     private String _color;
+    private int _name;
 
     public Vertex() {
         
@@ -21,6 +22,10 @@ public class Vertex {
 
     public void setColor(String color) {
         this._color = color;
+    }
+
+    void addNeightbour(Vertex b) {
+        
     }
     
 }
