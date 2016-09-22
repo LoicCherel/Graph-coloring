@@ -82,14 +82,14 @@ public class Graph {
         }
         int j = 0;
         while (colors[j] != 0) j++;
-        return j;
+        return j+1;
     }
     
     @Override
     public String toString() {
         String graph = "";
         for (int i = 0; i < this._lVertices.size(); i++) {
-            graph += this._lVertices.get(i).toString();
+            graph += this._lVertices.get(i).toString()+ "\n";
         }
         return graph;
     }
