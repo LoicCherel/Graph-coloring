@@ -15,6 +15,11 @@ public class Vertex {
     public Vertex() {
         
     }
+    
+    public int getName()
+    {
+        return _name;
+    }
 
     public int getColor() {
         return _color;
@@ -25,7 +30,18 @@ public class Vertex {
     }
 
     void addNeighbour(Vertex b) {
-        
+        this._lNeighbour.add(b);
+    }
+    
+    boolean isNeighbour(int nameVertex){
+        for(int i = 0; i < this._lNeighbour.size(); i++)
+        {
+            if (nameVertex == this._lNeighbour.get(i).getName())
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
