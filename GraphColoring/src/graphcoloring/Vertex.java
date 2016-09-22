@@ -1,5 +1,6 @@
 package graphcoloring;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,8 +13,10 @@ public class Vertex {
     private int _color;
     private int _name;
 
-    public Vertex() {
-        
+    public Vertex(int name) {
+        _lNeighbour = new ArrayList<Vertex>();
+        _color = -1;
+        _name = name;
     }
     
     public int getName()

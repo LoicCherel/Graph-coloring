@@ -1,5 +1,6 @@
 package graphcoloring;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,25 +13,32 @@ public class Graph {
     private List<Vertex> _lVertices;
 
     public Graph() {
-        
+        _lVertices = new ArrayList<Vertex>();
+        for(int i=0; i< 6 ; i++) {
+            _lVertices.add(new Vertex(i));
+        }
     }
     
     public Graph(int numberOfVertices) {
         Random rn = new Random();
+        _lVertices = new ArrayList<Vertex>();
         int a;
-        float threshold = 1 - (numberOfVertices / (numberOfVertices + 5 ));
-        
+        float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 5 ));
+        float prop;
+        System.out.println(threshold);
         for(int i=0; i<numberOfVertices; i++) {
-            _lVertices.add(new Vertex());
+            _lVertices.add(new Vertex(i));
         }
             
         int count = 0;
         for (Vertex ver : _lVertices){
             count++;
             for(int i=count; i<numberOfVertices; i++) {
-                a = rn.nextInt(numberOfVertices);
-                if (a/numberOfVertices > threshold){
-                    addEdge(ver,_lVertices.get(count));
+                a = rn.nextInt(numberOfVertices+1);
+                prop = (float)a / (float)numberOfVertices;
+                System.out.println(prop);
+                if (prop >= threshold){
+                    addEdge(ver,_lVertices.get(i));
                 }
             }
         }

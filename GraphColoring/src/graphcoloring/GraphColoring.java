@@ -10,8 +10,10 @@ public class GraphColoring {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Graph graph = new Graph();
-        
+        Graph graph = new Graph(6);
+        graph.colorGraph();
+
+        System.out.println(graph);
     }
     
 }
