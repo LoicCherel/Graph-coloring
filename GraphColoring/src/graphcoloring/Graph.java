@@ -18,7 +18,7 @@ public class Graph {
     public Graph(int numberOfVertices) {
         Random rn = new Random();
         int a;
-        float threshold = 0.95f;
+        float threshold = 1 - (numberOfVertices / (numberOfVertices + 5 ));
         
         for(int i=0; i<numberOfVertices; i++) {
             _lVertices.add(new Vertex());
