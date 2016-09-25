@@ -11,9 +11,16 @@ import java.util.Random;
 public class Graph {
     
     private List<Vertex> _lVertices;
+    private List<Integer> _existingColors;
+    private List<Integer> _deletedColors;
+    private Graph _backUp;
+    
+    private static int _colorsChanged = 0;
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
+        _existingColors = new ArrayList<Integer>();
+        _deletedColors = new ArrayList<Integer>();
         for(int i=0; i< 6 ; i++) {
             _lVertices.add(new Vertex(i));
         }
@@ -22,10 +29,12 @@ public class Graph {
     public Graph(int numberOfVertices) {
         Random rn = new Random();
         _lVertices = new ArrayList<Vertex>();
+        _existingColors = new ArrayList<Integer>();
+        _deletedColors = new ArrayList<Integer>();;
         int a;
         float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 5 ));
         float prop;
-        System.out.println(threshold);
+        //System.out.println(threshold);
         for(int i=0; i<numberOfVertices; i++) {
             _lVertices.add(new Vertex(i));
         }
@@ -36,7 +45,7 @@ public class Graph {
             for(int i=count; i<numberOfVertices; i++) {
                 a = rn.nextInt(numberOfVertices+1);
                 prop = (float)a / (float)numberOfVertices;
-                System.out.println(prop);
+                //System.out.println(prop);
                 if (prop >= threshold){
                     addEdge(ver,_lVertices.get(i));
                 }
@@ -44,17 +53,139 @@ public class Graph {
         }
     }
     
+    public void changeColor() {
+        this.prepareBackUp();
+        Vertex A = this.getRandomVertex();
+        this.changeColor(A);
+        _colorsChanged = 0;
+    }
+    
+    public int changeColor(Vertex A) {
+        Random rn = new Random();
+        int colorChoice = rn.nextInt(9);
+        if(colorChoice <=9){
+            int colorChosen = this.getRandomExistingColor(A);
+            if (colorChosen == -1){
+                System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
+                this.chargeBackUp();
+                return -1;
+            }
+            this.eraseVertexColor(A);
+            A.setColor(colorChosen);
+            int continueColorChanges = this.adaptNeighbours(A);
+            if(continueColorChanges == -1){
+                System.out.println("Error: the colors cannot be changed anymore");
+                this.chargeBackUp();
+                return -1;
+            }
+            else if(continueColorChanges == -2){
+                return -1;
+            }
+        }
+        return 1;
+    }    
+    
+    public int adaptNeighbours(Vertex A){
+        for(Vertex neighbour : A.getNeighbours()){
+            if (A.getColor() == neighbour.getColor()){
+                _colorsChanged++;
+                if(_colorsChanged >= 20){
+                    _colorsChanged = 0;
+                    return -1;
+                }
+                int continueColorChanges = this.changeColor(neighbour);
+                if (continueColorChanges == -1){
+                    return -2;
+                }
+            }
+        }
+        return 1;
+    }
+    
+    public void prepareBackUp(){
+        this._backUp = new Graph(this._lVertices.size());
+        this._backUp.equalsTo(this);
+    }
+
+    public void chargeBackUp(){
+        this.equalsTo(this.getBackUp());
+    }
+    
+    public void equalsTo(Graph graph){
+        for(int i = 0; i < graph._lVertices.size(); i++){
+            this._lVertices.get(i).setColor(graph._lVertices.get(i).getColor());
+            this._lVertices.get(i).setName(graph._lVertices.get(i).getName());
+            this._lVertices.get(i).getNeighbours().clear();
+        }
+        for(int i = 0; i < graph._lVertices.size(); i++){
+            for(int j = 0; j < graph._lVertices.get(i).getNeighbours().size(); j++){
+                int nameNeighbour = graph._lVertices.get(i).getNeighbours().get(j).getName();
+                this._lVertices.get(i).addNeighbour(this.findVertex(nameNeighbour));
+            }
+        }
+        this._deletedColors.clear();
+        this._existingColors.clear();
+        for(int i = 0; i < graph._existingColors.size(); i++){
+            this._existingColors.add((int)graph._existingColors.get(i));
+        }
+        for(int i = 0; i < graph._deletedColors.size(); i++){
+            this._deletedColors.add((int)graph._deletedColors.get(i));
+        }
+    }
+    
     public void colorGraph(){
         Integer count = 0;
         for(Vertex ver : _lVertices){
             ver.setColor(count);
+            _existingColors.add(count);
             count++;
+        }
+    }
+    
+    private int getRandomExistingColor(Vertex a){
+        if (_existingColors.size() <= 1){
+            return -1;
+        }
+        Random rn = new Random();
+        int index = rn.nextInt(_existingColors.size());
+        while (a.getColor() == _existingColors.get(index)){
+            index = rn.nextInt(_existingColors.size());
+        }
+        return _existingColors.get(index);
+    }
+    
+    private void eraseVertexColor(Vertex a){
+        int deletedColor = a.getColor();
+        a.setColor(-1);
+        boolean deletedColorExists = false;
+        int colorIndex = 0;
+        for(Vertex ver : _lVertices){
+            if (ver.getColor() == deletedColor){
+                deletedColorExists = true;
+            }
+        }
+        if (!deletedColorExists){
+            for(int i = 0; i < _existingColors.size(); i++){
+                if (_existingColors.get(i) == deletedColor){
+                    _existingColors.remove(i);
+                }
+            }
+            _deletedColors.add(deletedColor);
         }
     }
     
     private void addEdge(Vertex a, Vertex b) {
         a.addNeighbour(b);
         b.addNeighbour(a);
+    }
+    
+    private Vertex findVertex(int nameVertex){
+        for(int i = 0; i < this._lVertices.size(); i++){
+            if (this._lVertices.get(i).getName() == nameVertex){
+                return this._lVertices.get(i);
+            }
+        }
+        return null;
     }
 
     public Vertex getRandomVertex() {
@@ -64,25 +195,11 @@ public class Graph {
     }
 
     public int getNumberOfColors() {
-        int[] colors = new int[500];
-        for (int i = 0; i < this._lVertices.size(); i++) {
-            int tempColor = this._lVertices.get(i).getColor();
-            int j = 0;
-            boolean colorAdded = false;
-            while (colors[j] != 0) {
-                if (colors[j] == tempColor) {
-                    colorAdded = true;
-                    break;
-                }
-                j++;
-            }
-            if (!colorAdded) {
-                colors[j] = tempColor;
-            }
-        }
-        int j = 0;
-        while (colors[j] != 0) j++;
-        return j;
+        return _existingColors.size();
+    }
+    
+    public Graph getBackUp(){
+        return this._backUp;
     }
     
     @Override

@@ -23,6 +23,10 @@ public class Vertex {
     {
         return _name;
     }
+    
+    public void setName(int name){
+        _name = name;
+    }
 
     public int getColor() {
         return _color;
@@ -30,6 +34,10 @@ public class Vertex {
 
     public void setColor(int color) {
         this._color = color;
+    }
+    
+    public List<Vertex> getNeighbours(){
+        return _lNeighbour;
     }
 
     void addNeighbour(Vertex b) {
