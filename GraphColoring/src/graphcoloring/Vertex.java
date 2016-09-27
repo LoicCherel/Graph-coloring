@@ -1,5 +1,6 @@
 package graphcoloring;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  *
  * @author p1401687
  */
-public class Vertex {
+public class Vertex implements Serializable{
     
     private List<Vertex> _lNeighbour;
     private int _color;
@@ -67,5 +68,4 @@ public class Vertex {
         vertex += "\n";
         return vertex;
     }
-    
 }
