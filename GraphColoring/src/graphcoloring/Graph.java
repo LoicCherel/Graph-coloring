@@ -52,40 +52,76 @@ public class Graph {
             }
         }
     }
-    
+
+    /**
+     *changeColor() a 3 chances sur 4 de diminuer le nombre de couleurs du graphe,
+     *et une chance sur 4 d'augmenter le nombre de couleurs
+     */
     public void changeColor() {
-        this.prepareBackUp();
-        Vertex A = this.getRandomVertex();
-        this.changeColor(A);
+        Random rn = new Random();
+        int colorChoice = rn.nextInt(100);
+        if (colorChoice < 75){
+            //Si la diminution de couleurs crée des problemes (voisins avec la même couleur), il nous faut
+            //utiliser une copie du graphe pour revenir à l'état où le graphe fonctionne
+            this.prepareBackUp();
+            this.decreaseNumberOfColors();
+        }
+        else{
+            this.increaseNumberOfColors();
+        }
+        //Une fois que nous avons adapté la couleur des voisins avec la couleur du sommet modifié, nous
+        //remettons l'itérateur qui compte le nombre de fois que des couleurs ont changé dans le graphe
+        //à zéro
         _colorsChanged = 0;
     }
     
-    public int changeColor(Vertex A) {
-        Random rn = new Random();
-        int colorChoice = rn.nextInt(9);
-        if(colorChoice <=9){
-            int colorChosen = this.getRandomExistingColor(A);
-            if (colorChosen == -1){
-                System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
-                this.chargeBackUp();
-                return -1;
+    /**
+     *
+     */
+    public void decreaseNumberOfColors(){
+        this.prepareBackUp();
+        Vertex A = this.getRandomVertex();
+        int colorChosen = this.getRandomExistingColor(A);
+        if (colorChosen == -1){
+            System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
+            return;
+        }
+        this.changeColor(A, colorChosen);
+    }
+    
+    public void increaseNumberOfColors(){
+        Vertex A = this.getRandomVertex();
+        int colorChosen = this.getRandomDeletedColor();
+        if (colorChosen == -1){
+            System.out.println("Error: no color has been deleted in the graph");
+            return;
+        }
+        for(int i = 0; i < _deletedColors.size(); i++){
+            if (_deletedColors.get(i) == colorChosen){
+                _deletedColors.remove(i);
             }
-            this.eraseVertexColor(A);
-            A.setColor(colorChosen);
-            int continueColorChanges = this.adaptNeighbours(A);
-            if(continueColorChanges == -1){
-                System.out.println("Error: the colors cannot be changed anymore");
-                this.chargeBackUp();
-                return -1;
-            }
-            else if(continueColorChanges == -2){
-                return -1;
-            }
+        }
+        _existingColors.add(colorChosen);
+        this.changeColor(A, colorChosen);
+    }
+    
+    public int changeColor(Vertex A, int color) {
+        this.eraseVertexColor(A);
+        A.setColor(color);
+        int continueColorChanges = this.adaptNeighbours(A);
+        if(continueColorChanges == -1){
+            System.out.println("Error: the colors cannot be changed anymore");
+            this.chargeBackUp();
+            return -1;
+        }
+        else if(continueColorChanges == -2){
+            return -1;
         }
         return 1;
     }    
     
     public int adaptNeighbours(Vertex A){
+        System.out.println(".");
         for(Vertex neighbour : A.getNeighbours()){
             if (A.getColor() == neighbour.getColor()){
                 _colorsChanged++;
@@ -93,7 +129,13 @@ public class Graph {
                     _colorsChanged = 0;
                     return -1;
                 }
-                int continueColorChanges = this.changeColor(neighbour);
+                int color = this.getRandomExistingColor(A);
+                if (color == -1){
+                    System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
+                    this.chargeBackUp();
+                    return -2;
+                }
+                int continueColorChanges = this.changeColor(neighbour, color);
                 if (continueColorChanges == -1){
                     return -2;
                 }
@@ -154,11 +196,19 @@ public class Graph {
         return _existingColors.get(index);
     }
     
+    private int getRandomDeletedColor(){
+        if (_deletedColors.size() < 1){
+            return -1;
+        }
+        Random rn = new Random();
+        int index = rn.nextInt(_deletedColors.size());
+        return _deletedColors.get(index);
+    }
+    
     private void eraseVertexColor(Vertex a){
         int deletedColor = a.getColor();
         a.setColor(-1);
         boolean deletedColorExists = false;
-        int colorIndex = 0;
         for(Vertex ver : _lVertices){
             if (ver.getColor() == deletedColor){
                 deletedColorExists = true;
