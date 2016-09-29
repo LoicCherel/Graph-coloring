@@ -71,7 +71,6 @@ public class Graph implements Serializable{
     public void applySimulatedAnnealingAlgorithm(){
         //int temperature = (this._lVertices.size() - 1) * 100;
         double temperature = 4;
-        System.out.println("..." + temperature);
         int energy, energyVariation;
         Vertex A;
         int color;
@@ -82,6 +81,7 @@ public class Graph implements Serializable{
             energy = this.getNumberOfColors();
             checkEnergy(energy);
             System.out.println("Energy: " + energy);
+            this.prepareBackUp();
             if(rn.nextInt(100) <= 50){
                 color = this.getRandomExistingColor(A);
                 if (color == -1){
@@ -100,8 +100,6 @@ public class Graph implements Serializable{
                 }
                 _existingColors.add(color);
             }
-            this.prepareBackUp();
-            
             //System.out.println("Energy of back up: " + this.getBackUp().getNumberOfColors());
             this.changeColor(A, color);
             energyVariation = this.getNumberOfColors() - energy;
