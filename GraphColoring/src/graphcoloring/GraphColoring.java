@@ -15,7 +15,12 @@ public class GraphColoring {
         System.out.println(graph);
         System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
         
-        System.out.println("Decreasing the number of colors...\n");
+        graph.applySimulatedAnnealingAlgorithm();
+        
+        System.out.println(graph);
+        System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
+        
+        /*System.out.println("Decreasing the number of colors...\n");
         for (int i = 0; i < 10; i++){
             graph.decreaseNumberOfColors();
             //System.out.println(graph);
@@ -27,6 +32,6 @@ public class GraphColoring {
             graph.increaseNumberOfColors();
             System.out.println(graph);
             System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        }
+        }*/
     }
 }

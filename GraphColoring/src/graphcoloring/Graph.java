@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import static java.lang.Math.exp;
 
 
 /**
@@ -21,7 +21,6 @@ import java.util.logging.Logger;
  * @author p1401687
  */
 public class Graph implements Serializable{
-    
     private List<Vertex> _lVertices;
     private List<Integer> _existingColors;
     private List<Integer> _deletedColors;
@@ -64,6 +63,61 @@ public class Graph implements Serializable{
             }
         }
     }
+    
+    public void applySimulatedAnnealingAlgorithm(){
+        //int temperature = (this._lVertices.size() - 1) * 100;
+        int temperature = 100;
+        int energy, energyVariation;
+        Vertex A;
+        int color;
+        _colorsChanged = 0;
+        while(temperature > 0){
+            Random rn = new Random();
+            A = this.getRandomVertex();
+            energy = this.getNumberOfColors();
+            System.out.println("Energy: " + energy);
+            if(rn.nextInt(100) <= 50){
+                color = this.getRandomExistingColor(A);
+                if (color == -1){
+                    continue;
+                }
+            }
+            else{
+                color = this.getRandomDeletedColor();
+                if (color == -1){
+                    continue;
+                }
+                for(int i = 0; i < _deletedColors.size(); i++){
+                    if (_deletedColors.get(i) == color){
+                        _deletedColors.remove(i);
+                    }
+                }
+                _existingColors.add(color);
+            }
+            this.changeColor(A, color);
+            energyVariation = this.getNumberOfColors() - energy;
+            switch (energyVariation) {
+                case 1:
+                    double prob = exp((double)-1/temperature);
+                    System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
+                    if (rn.nextDouble() > prob ){
+                        this.chargeBackUp();
+                        System.out.println("Changes not saved...");
+                    }
+                    else{
+                        System.out.println("Changes SAVED");
+                    }
+                    break;
+                case -1:
+                    System.out.println("The energy has decreased");
+                    break;
+                default:
+                    System.out.println("The energy has not changed");
+                    temperature--;
+                    break;
+            }
+        }
+    }
 
     /**
      *changeColor() a 3 chances sur 4 de diminuer le nombre de couleurs du graphe,
@@ -90,23 +144,24 @@ public class Graph implements Serializable{
     /**
      *
      */
-    public void decreaseNumberOfColors(){
+    public int decreaseNumberOfColors(){
         this.prepareBackUp();
         Vertex A = this.getRandomVertex();
         int colorChosen = this.getRandomExistingColor(A);
         if (colorChosen == -1){
-            System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
-            return;
+            System.out.println("Il y a trop peu de couleurs : impossible d'en supprimer");
+            return -1;
         }
-        this.changeColor(A, colorChosen);
+        int feedback = this.changeColor(A, colorChosen);
+        return feedback;
     }
     
-    public void increaseNumberOfColors(){
+    public int increaseNumberOfColors(){
         Vertex A = this.getRandomVertex();
         int colorChosen = this.getRandomDeletedColor();
         if (colorChosen == -1){
-            System.out.println("Error: no color has been deleted in the graph");
-            return;
+            System.out.println("Impossible de rajouter une couleur : il est nécessaire d'en supprimer auparavant");
+            return -3;
         }
         for(int i = 0; i < _deletedColors.size(); i++){
             if (_deletedColors.get(i) == colorChosen){
@@ -114,10 +169,12 @@ public class Graph implements Serializable{
             }
         }
         _existingColors.add(colorChosen);
-        this.changeColor(A, colorChosen);
+        int feedback = this.changeColor(A, colorChosen);
+        return feedback;
     }
     
     public int changeColor(Vertex A, int color) {
+        this.prepareBackUp();
         this.eraseVertexColor(A);
         A.setColor(color);
         int continueColorChanges = this.adaptNeighbours(A);
@@ -133,7 +190,6 @@ public class Graph implements Serializable{
     }    
     
     public int adaptNeighbours(Vertex A){
-        System.out.println(".");
         for(Vertex neighbour : A.getNeighbours()){
             if (A.getColor() == neighbour.getColor()){
                 _colorsChanged++;
