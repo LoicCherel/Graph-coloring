@@ -14,6 +14,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.lang.Math.exp;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 
 /**
@@ -27,6 +30,7 @@ public class Graph implements Serializable{
     private Graph _backUp;
     
     private static int _colorsChanged = 0;
+    private static boolean _file = false;
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
@@ -75,6 +79,7 @@ public class Graph implements Serializable{
             Random rn = new Random();
             A = this.getRandomVertex();
             energy = this.getNumberOfColors();
+            checkEnergy(energy);
             System.out.println("Energy: " + energy);
             if(rn.nextInt(100) <= 50){
                 color = this.getRandomExistingColor(A);
@@ -377,5 +382,25 @@ public class Graph implements Serializable{
     
     public void randomColor(){
         
+    }
+
+    private void checkEnergy(Integer energy) {
+        if(!_file){
+            System.out.println("Creation/Vidage du fichier");
+        try {
+            Files.deleteIfExists(Paths.get("myfile.txt"));
+            Files.write(Paths.get("myfile.txt"), "".getBytes(), StandardOpenOption.CREATE);
+        }catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+        _file = true;
+        }else{
+            String string = energy.toString() + "\n";
+            try {
+                Files.write(Paths.get("myfile.txt"), string.getBytes(), StandardOpenOption.APPEND);
+            }catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
     }
 }
