@@ -5,6 +5,9 @@
  */
 package graphcoloring;
 
+import java.io.File;
+import java.io.FileReader;
+
 /**
  *
  * @author Loïc
@@ -48,6 +51,7 @@ public class view extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Project Graph Coloring");
 
         jTextField1.setText("5");
 
@@ -56,6 +60,12 @@ public class view extends javax.swing.JFrame {
         jLabel2.setText("Nombre de couleurs dans le graphe : ");
 
         jButton1.setText("Démarrer l'ARS");
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Générer un graphe avec");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -67,6 +77,7 @@ public class view extends javax.swing.JFrame {
         jLabel4.setText("sommets.");
 
         jButton3.setText("Augmenter le nombre de couleurs");
+        jButton3.setEnabled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -74,6 +85,7 @@ public class view extends javax.swing.JFrame {
         });
 
         jButton4.setText("Diminuer le nombre de couleurs");
+        jButton4.setEnabled(false);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -158,11 +170,23 @@ public class view extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         graph = new Graph((Integer.parseInt(jTextField1.getText())));
         graph.colorGraph();
+        unlockButtons();
         update();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        jFileChooser.show();
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == jFileChooser.APPROVE_OPTION) {
+            File file = jFileChooser.getSelectedFile();
+            System.out.println(file.getName());
+            graph = new Graph();
+            graph.charger(file.getName());
+            unlockButtons();
+            update();
+
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -175,9 +199,19 @@ public class view extends javax.swing.JFrame {
         update();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        graph.applySimulatedAnnealingAlgorithm();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void update(){
         jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
         jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
+    }
+    
+    private void unlockButtons(){
+        jButton1.setEnabled(true);
+        jButton3.setEnabled(true);
+        jButton4.setEnabled(true);
     }
     
     /**

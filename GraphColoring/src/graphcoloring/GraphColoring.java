@@ -10,12 +10,8 @@ public class GraphColoring {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        boolean ser = true;
         Graph graph = new Graph(10);
-        graph.colorGraph();
-        System.out.println(graph);
-        System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        
-        graph.applySimulatedAnnealingAlgorithm();
         
         System.out.println(graph);
         System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
