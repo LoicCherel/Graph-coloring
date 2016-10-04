@@ -58,11 +58,11 @@ public class Vertex implements Serializable{
     
     @Override
     public String toString() {
-        String vertex = this._name + ", color = " + this._color + ", Neighbours = ";
+        String vertex = this._name + "," + this._color + ",";
         for (int i = 0; i < _lNeighbour.size(); i++) {
-            vertex += "==> " + _lNeighbour.get(i)._name + ", Color = " + _lNeighbour.get(i)._color;
+            vertex += _lNeighbour.get(i)._name;
             if (i < _lNeighbour.size() - 1) {
-                vertex += " | ";
+                vertex += "|";
             }
         }
         vertex += "\n";
