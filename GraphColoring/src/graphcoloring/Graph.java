@@ -64,6 +64,10 @@ public class Graph implements Serializable{
             }
         }
     }
+    
+    public void applySimulatedAnnealingAlgorithm(){
+        
+    }
 
     /**
      *changeColor() a 3 chances sur 4 de diminuer le nombre de couleurs du graphe,
@@ -280,6 +284,9 @@ public class Graph implements Serializable{
             f = new FileInputStream(entree);
             ObjectInputStream in = new ObjectInputStream(f);
             _lVertices =(List<Vertex>) in.readObject();
+            for(Vertex ver : _lVertices){
+                _existingColors.add(ver.getColor());
+            }
             System.out.println("Apres Chargement");
             in.close();
         } catch (FileNotFoundException ex) {
