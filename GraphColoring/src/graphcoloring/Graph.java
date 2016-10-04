@@ -17,6 +17,11 @@ import static java.lang.Math.exp;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import javafx.util.Pair;
 
 
 /**
@@ -45,7 +50,7 @@ public class Graph implements Serializable{
         Random rn = new Random();
         _lVertices = new ArrayList<Vertex>();
         _existingColors = new ArrayList<Integer>();
-        _deletedColors = new ArrayList<Integer>();;
+        _deletedColors = new ArrayList<Integer>();
         int a;
         float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 5 ));
         float prop;
@@ -71,7 +76,7 @@ public class Graph implements Serializable{
     public void applySimulatedAnnealingAlgorithm(){
 
         //int temperature = (this._lVertices.size() - 1) * 100;
-        double temperature = 4;
+        double temperature = 2;
         int energy, energyVariation;
         Vertex A;
         int color;
@@ -121,7 +126,7 @@ public class Graph implements Serializable{
                     break;
                 default:
                     System.out.println("The energy has not changed");
-                    temperature -= 0.1;
+                    temperature -= 0.01;
                     break;
             }
         }
@@ -325,6 +330,36 @@ public class Graph implements Serializable{
     
     public Graph getBackUp(){
         return this._backUp;
+    }
+    
+    public int getLeastUsedColor(){
+        Map<Integer, Integer> colors = new HashMap<>();
+        for(Integer color : _existingColors){
+            colors.put(color, 0);
+        }
+        for(Vertex ver : this._lVertices){
+            colors.replace(ver.getColor(), colors.get(ver.getColor()).intValue() + 1);
+        }
+        int min = colors.get(_lVertices.get(0).getColor()).intValue();
+        for(Integer c : colors.keySet()){
+            if (colors.get(c).intValue() < min) min = colors.get(c).intValue();
+        }
+        return min;
+    }
+    
+    public int getMostUsedColor(){
+        Map<Integer, Integer> colors = new TreeMap<>();
+        for(Integer color : _existingColors){
+            colors.put(color, 0);
+        }
+        for(Vertex ver : this._lVertices){
+            colors.replace(ver.getColor(), colors.get(ver.getColor()).intValue() + 1);
+        }
+        int max = colors.get(_lVertices.get(0).getColor()).intValue();
+        for(Integer c : colors.keySet()){
+            if (colors.get(c).intValue() > max) max = colors.get(c).intValue();
+        }
+        return max;
     }
     
     @Override
