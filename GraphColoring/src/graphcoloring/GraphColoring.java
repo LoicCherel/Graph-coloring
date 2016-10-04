@@ -11,7 +11,8 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
         boolean ser = true;
-        Graph graph = new Graph(10);
-        
+        Graph graph = new Graph(500);
+        graph.colorGraph();
+        graph.sauvegarder("graph500.ser");
     }
 }
