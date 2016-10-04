@@ -19,9 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import javafx.util.Pair;
 
 
 /**
@@ -77,16 +75,16 @@ public class Graph implements Serializable{
 
         //int temperature = (this._lVertices.size() - 1) * 100;
         double temperature = 2;
-        int energy, energyVariation;
+        double energy = this.getEnergy(), oldEnergy = this.getEnergy(), energyVariation;
         Vertex A;
         int color;
         _colorsChanged = 0;
         while(temperature > 0){
             Random rn = new Random();
             A = this.getRandomVertex();
-            energy = this.getNumberOfColors();
+            energy = this.getEnergy();
+            //energy = this.getEnergy();
             checkEnergy(energy);
-            System.out.println("Energy: " + energy);
             this.prepareBackUp();
             if(rn.nextInt(100) <= 50){
                 color = this.getRandomExistingColor(A);
@@ -108,9 +106,8 @@ public class Graph implements Serializable{
             }
             //System.out.println("Energy of back up: " + this.getBackUp().getNumberOfColors());
             this.changeColor(A, color);
-            energyVariation = this.getNumberOfColors() - energy;
-            switch (energyVariation) {
-                case 1:
+            energyVariation = oldEnergy - energy;
+            if (energyVariation > 0) {
                     double prob = exp((double)-1/temperature);
                     System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
                     if (rn.nextDouble() > prob ){
@@ -120,15 +117,15 @@ public class Graph implements Serializable{
                     else{
                         System.out.println("Changes SAVED");
                     }
-                    break;
-                case -1:
-                    System.out.println("The energy has decreased");
-                    break;
-                default:
-                    System.out.println("The energy has not changed");
-                    temperature -= 0.01;
-                    break;
             }
+            else if (energyVariation < 0){
+                    System.out.println("The energy has decreased");
+            }
+            else{
+                System.out.println("The energy has not changed");
+                temperature -= 0.01;
+            }
+            oldEnergy = energy;
         }
     }
 
@@ -424,7 +421,7 @@ public class Graph implements Serializable{
         
     }
 
-    private void checkEnergy(Integer energy) {
+    private void checkEnergy(double energy) {
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
         try {
@@ -435,12 +432,17 @@ public class Graph implements Serializable{
         }
         _file = true;
         }else{
-            String string = energy.toString() + "\n";
+            String string = energy + "\n";
             try {
                 Files.write(Paths.get("myfile.txt"), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
         }
+    }
+    
+        
+    public double getEnergy(){
+        return 100.0 * (double)this.getNumberOfColors() + 99.0 * ((double)this.getLeastUsedColor()/(double)this.getMostUsedColor());
     }
 }

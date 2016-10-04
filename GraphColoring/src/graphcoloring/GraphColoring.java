@@ -11,13 +11,9 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
         Graph graph = new Graph(10);
-        
+        graph.colorGraph();
+        graph.applySimulatedAnnealingAlgorithm();
         System.out.println(graph);
-        System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        
-        System.out.println("Color least used: " + graph.getLeastUsedColor());
-        
-        System.out.println("Color most used: " + graph.getMostUsedColor());
         
         /*System.out.println("Decreasing the number of colors...\n");
         for (int i = 0; i < 10; i++){
