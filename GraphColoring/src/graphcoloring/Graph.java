@@ -75,12 +75,14 @@ public class Graph implements Serializable{
     public void applySimulatedAnnealingAlgorithm(){
 
         //int temperature = (this._lVertices.size() - 1) * 100;
-        double temperature = 1000;
+        double temperature = 100;
+        int changementVaration = 0;
         double energy = this.getEnergy(), oldEnergy = this.getEnergy(), energyVariation;
         Vertex A;
         int color;
         _colorsChanged = 0;
-        while(temperature > 0){
+        //while(temperature > 0){
+        for(int k = 0; k < 5000; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
             energy = this.getEnergy();
@@ -88,7 +90,7 @@ public class Graph implements Serializable{
             checkEnergy(energy);
             checkTemperature(temperature);
             this.prepareBackUp();
-            if(rn.nextInt(100) <= 50){
+            if(rn.nextInt(10) <= temperature){
                 color = this.getRandomExistingColor(A);
                 if (color == -1){
                     continue;
@@ -111,21 +113,21 @@ public class Graph implements Serializable{
             energyVariation = oldEnergy - energy;
             if (energyVariation > 0) {
                     double prob = exp((double)-1/temperature);
-                    System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
+                    //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
                     if (rn.nextDouble() > prob ){
                         this.chargeBackUp();
-                        System.out.println("Changes not saved... energy = " + this.getNumberOfColors());
+                        //System.out.println("Changes not saved... energy = " + this.getNumberOfColors());
                     }
                     else{
-                        System.out.println("Changes SAVED");
+                        //System.out.println("Changes SAVED");
                     }
             }
             else if (energyVariation < 0){
-                    System.out.println("The energy has decreased");
+                    //System.out.println("The energy has decreased");
             }
             else{
-                System.out.println("The energy has not changed");
-                temperature -= 1;
+                //System.out.println("The energy has not changed");
+                //temperature -= 0.1;
             }
             oldEnergy = energy;
         }
@@ -444,7 +446,7 @@ public class Graph implements Serializable{
     }
     
     private void checkTemperature(double temperature) {
-        System.out.println("Temperature: " + temperature);
+        //System.out.println("Temperature: " + temperature);
         if(!_fileTemp){
             System.out.println("Creation/Vidage du fichier");
         try {
