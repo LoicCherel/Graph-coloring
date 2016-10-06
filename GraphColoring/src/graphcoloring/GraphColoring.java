@@ -24,6 +24,8 @@ public class GraphColoring {
         
         graph.displayGraph();
         
+        System.out.println(graph.getLeastUsedColor());
+        
         /*System.out.println("Decreasing the number of colors...\n");
         for (int i = 0; i < 10; i++){
             graph.decreaseNumberOfColors();
