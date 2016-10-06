@@ -19,9 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import javafx.util.Pair;
 
 
 /**
@@ -36,6 +34,7 @@ public class Graph implements Serializable{
     
     private static int _colorsChanged = 0;
     private static boolean _file = false;
+    private static boolean _fileTemp = false;
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
@@ -76,17 +75,18 @@ public class Graph implements Serializable{
     public void applySimulatedAnnealingAlgorithm(){
 
         //int temperature = (this._lVertices.size() - 1) * 100;
-        double temperature = 2;
-        int energy, energyVariation;
+        double temperature = 1000;
+        double energy = this.getEnergy(), oldEnergy = this.getEnergy(), energyVariation;
         Vertex A;
         int color;
         _colorsChanged = 0;
         while(temperature > 0){
             Random rn = new Random();
             A = this.getRandomVertex();
-            energy = this.getNumberOfColors();
+            energy = this.getEnergy();
+            //energy = this.getEnergy();
             checkEnergy(energy);
-            System.out.println("Energy: " + energy);
+            checkTemperature(temperature);
             this.prepareBackUp();
             if(rn.nextInt(100) <= 50){
                 color = this.getRandomExistingColor(A);
@@ -108,9 +108,8 @@ public class Graph implements Serializable{
             }
             //System.out.println("Energy of back up: " + this.getBackUp().getNumberOfColors());
             this.changeColor(A, color);
-            energyVariation = this.getNumberOfColors() - energy;
-            switch (energyVariation) {
-                case 1:
+            energyVariation = oldEnergy - energy;
+            if (energyVariation > 0) {
                     double prob = exp((double)-1/temperature);
                     System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
                     if (rn.nextDouble() > prob ){
@@ -120,15 +119,15 @@ public class Graph implements Serializable{
                     else{
                         System.out.println("Changes SAVED");
                     }
-                    break;
-                case -1:
-                    System.out.println("The energy has decreased");
-                    break;
-                default:
-                    System.out.println("The energy has not changed");
-                    temperature -= 0.01;
-                    break;
             }
+            else if (energyVariation < 0){
+                    System.out.println("The energy has decreased");
+            }
+            else{
+                System.out.println("The energy has not changed");
+                temperature -= 1;
+            }
+            oldEnergy = energy;
         }
     }
 
@@ -424,23 +423,49 @@ public class Graph implements Serializable{
         
     }
 
-    private void checkEnergy(Integer energy) {
+    private void checkEnergy(double energy) {
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
         try {
-            Files.deleteIfExists(Paths.get("myfile.txt"));
-            Files.write(Paths.get("myfile.txt"), "".getBytes(), StandardOpenOption.CREATE);
+            Files.deleteIfExists(Paths.get("energy.txt"));
+            Files.write(Paths.get("energy.txt"), "".getBytes(), StandardOpenOption.CREATE);
         }catch (IOException e) {
             //exception handling left as an exercise for the reader
         }
         _file = true;
         }else{
-            String string = energy.toString() + "\n";
+            String string = energy + "\n";
             try {
-                Files.write(Paths.get("myfile.txt"), string.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get("energy.txt"), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
         }
+    }
+    
+    private void checkTemperature(double temperature) {
+        System.out.println("Temperature: " + temperature);
+        if(!_fileTemp){
+            System.out.println("Creation/Vidage du fichier");
+        try {
+            Files.deleteIfExists(Paths.get("temperature.txt"));
+            Files.write(Paths.get("temperature.txt"), "".getBytes(), StandardOpenOption.CREATE);
+        }catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+        _fileTemp = true;
+        }else{
+            String string = temperature + "\n";
+            try {
+                Files.write(Paths.get("temperature.txt"), string.getBytes(), StandardOpenOption.APPEND);
+            }catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
+    }
+    
+        
+    public double getEnergy(){
+        return 100.0 * (double)this.getNumberOfColors() + 99.0 * ((double)this.getLeastUsedColor()/(double)this.getMostUsedColor());
     }
 }
