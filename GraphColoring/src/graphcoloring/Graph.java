@@ -32,7 +32,7 @@ public class Graph implements Serializable{
     private List<Vertex> _lVertices;
     private List<Integer> _existingColors;
     private List<Integer> _deletedColors;
-    private Graph _backUp;
+    private Graph _backUp;  
     
     private static int _colorsChanged = 0;
     private static boolean _file = false;
@@ -440,6 +440,19 @@ public class Graph implements Serializable{
                 Files.write(Paths.get("myfile.txt"), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
+            }
+        }
+    }
+    
+    public void displayGraph(){
+        for(Vertex ver : _lVertices){
+            System.out.println("{id :" + ver.getName() +"},");
+        }
+        
+        for(Vertex ver : _lVertices){
+            for(Vertex v : ver.getNeighbours()){
+                if(v.getName()>ver.getName())
+                    System.out.println("{source : " + ver.getName() + ", target : " + v.getName() +"},");
             }
         }
     }
