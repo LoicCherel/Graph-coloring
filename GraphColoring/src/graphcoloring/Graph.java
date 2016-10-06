@@ -34,6 +34,7 @@ public class Graph implements Serializable{
     
     private static int _colorsChanged = 0;
     private static boolean _file = false;
+    private static boolean _fileTemp = false;
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
@@ -74,7 +75,7 @@ public class Graph implements Serializable{
     public void applySimulatedAnnealingAlgorithm(){
 
         //int temperature = (this._lVertices.size() - 1) * 100;
-        double temperature = 2;
+        double temperature = 1000;
         double energy = this.getEnergy(), oldEnergy = this.getEnergy(), energyVariation;
         Vertex A;
         int color;
@@ -85,6 +86,7 @@ public class Graph implements Serializable{
             energy = this.getEnergy();
             //energy = this.getEnergy();
             checkEnergy(energy);
+            checkTemperature(temperature);
             this.prepareBackUp();
             if(rn.nextInt(100) <= 50){
                 color = this.getRandomExistingColor(A);
@@ -123,7 +125,7 @@ public class Graph implements Serializable{
             }
             else{
                 System.out.println("The energy has not changed");
-                temperature -= 0.01;
+                temperature -= 1;
             }
             oldEnergy = energy;
         }
@@ -425,8 +427,8 @@ public class Graph implements Serializable{
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
         try {
-            Files.deleteIfExists(Paths.get("myfile.txt"));
-            Files.write(Paths.get("myfile.txt"), "".getBytes(), StandardOpenOption.CREATE);
+            Files.deleteIfExists(Paths.get("energy.txt"));
+            Files.write(Paths.get("energy.txt"), "".getBytes(), StandardOpenOption.CREATE);
         }catch (IOException e) {
             //exception handling left as an exercise for the reader
         }
@@ -434,7 +436,28 @@ public class Graph implements Serializable{
         }else{
             String string = energy + "\n";
             try {
-                Files.write(Paths.get("myfile.txt"), string.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get("energy.txt"), string.getBytes(), StandardOpenOption.APPEND);
+            }catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
+    }
+    
+    private void checkTemperature(double temperature) {
+        System.out.println("Temperature: " + temperature);
+        if(!_fileTemp){
+            System.out.println("Creation/Vidage du fichier");
+        try {
+            Files.deleteIfExists(Paths.get("temperature.txt"));
+            Files.write(Paths.get("temperature.txt"), "".getBytes(), StandardOpenOption.CREATE);
+        }catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+        _fileTemp = true;
+        }else{
+            String string = temperature + "\n";
+            try {
+                Files.write(Paths.get("temperature.txt"), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
