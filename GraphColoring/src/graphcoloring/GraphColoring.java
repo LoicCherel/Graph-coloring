@@ -10,6 +10,7 @@ public class GraphColoring {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         Graph graph = new Graph(32);
         
         System.out.println(graph);
@@ -19,6 +20,7 @@ public class GraphColoring {
         System.out.println("Color least used: " + graph.getLeastUsedColor());
         
         System.out.println("Color most used: " + graph.getMostUsedColor());
+
         
         graph.displayGraph();
         
