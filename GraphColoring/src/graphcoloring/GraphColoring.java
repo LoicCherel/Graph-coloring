@@ -2,7 +2,7 @@ package graphcoloring;
 
 /**
  *
- * @author p1401687
+ * @author Loïc Cherel, Thomas Raynaud, Wilians Rodulfo
  */
 public class GraphColoring {
 
@@ -11,35 +11,11 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
 
-        Graph graph = new Graph(32);
+        Graph graph = new Graph(10);
         
-        System.out.println(".....".replaceAll("\\.",","));
-        
-        System.out.println(graph);
-        graph.colorGraph();
-        System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        
-        System.out.println("Color least used: " + graph.getLeastUsedColor());
-        
-        System.out.println("Color most used: " + graph.getMostUsedColor());
+        graph.applySimulatedAnnealingAlgorithm();
+        graph.displayColors();
 
-        
-        graph.displayGraph();
-        
-        System.out.println(graph.getLeastUsedColor());
-        
-        /*System.out.println("Decreasing the number of colors...\n");
-        for (int i = 0; i < 10; i++){
-            graph.decreaseNumberOfColors();
-            //System.out.println(graph);
-            //System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        }
-        System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        System.out.println("Increasing the number of colors...\n");
-        for (int i = 0; i < 30; i++){
-            graph.increaseNumberOfColors();
-            System.out.println(graph);
-            System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
-        }*/
+        System.out.println(graph);
     }
 }
