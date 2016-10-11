@@ -282,19 +282,21 @@ public class Graph implements Serializable{
     }
 
     private void checkEnergy(double energy) {
+        String outputFile = "../energy.csv";
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
         try {
-            Files.deleteIfExists(Paths.get("energy.txt"));
-            Files.write(Paths.get("energy.txt"), "".getBytes(), StandardOpenOption.CREATE);
+            Files.deleteIfExists(Paths.get(outputFile));
+            Files.write(Paths.get(outputFile), "".getBytes(), StandardOpenOption.CREATE);
         }catch (IOException e) {
             //exception handling left as an exercise for the reader
         }
         _file = true;
         }else{
-            String string = energy + "\n";
+            String string = energy + ";\n";
+            string.replaceAll("\\.",",");
             try {
-                Files.write(Paths.get("energy.txt"), string.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
