@@ -162,7 +162,7 @@ public class Graph implements Serializable{
         //Il faut adapter les voisins du sommet A au changement de couleur.
         int continueColorChanges = this.adaptNeighbours(A);
         if(continueColorChanges == -1){
-            System.out.println("Error: the colors cannot be changed anymore");
+            //System.out.println("Error: the colors cannot be changed anymore");
             this.chargeBackUp();
             return -1;
         }
@@ -184,7 +184,7 @@ public class Graph implements Serializable{
                 }
                 int color = this.getRandomColor("allColors", A);
                 if (color == -1){
-                    System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
+                    //System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
                     this.chargeBackUp();
                     return -2;
                 }
@@ -278,7 +278,7 @@ public class Graph implements Serializable{
                 }
             }
         }
-        else System.out.println("Valeurs nulles");
+        //else System.out.println("Valeurs nulles");
     }
 
     private void checkEnergy(double energy) {
