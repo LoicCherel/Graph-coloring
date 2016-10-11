@@ -438,9 +438,9 @@ public class Graph implements Serializable{
         _file = true;
         }else{
             String string = energy + ";\n";
-            string.replaceAll("\\.",",");
+            String str = string.replaceAll("\\.",",");
             try {
-                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get(outputFile), str.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }

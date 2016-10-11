@@ -13,6 +13,8 @@ public class GraphColoring {
 
         Graph graph = new Graph(32);
         
+        System.out.println(".....".replaceAll("\\.",","));
+        
         System.out.println(graph);
         graph.colorGraph();
         System.out.println("Number of colors: " + graph.getNumberOfColors() + "\n");
