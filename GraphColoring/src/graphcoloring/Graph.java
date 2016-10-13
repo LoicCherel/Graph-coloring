@@ -1,9 +1,11 @@
 package graphcoloring;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -137,8 +139,8 @@ public class Graph implements Serializable{
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            storeVariables(energy, temperature);
-            System.out.println(energyVariation);
+            storeVariables(energy, temperature, energyVariation);
+            //System.out.println(energyVariation);
         }
     }
     
@@ -281,7 +283,7 @@ public class Graph implements Serializable{
         //else System.out.println("Valeurs nulles");
     }
 
-    private void storeVariables(double energy, double temperature) {
+    private void storeVariables(double energy, double temperature, double energyVariation) {
         String outputFile = "../energy.csv";
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
@@ -293,7 +295,7 @@ public class Graph implements Serializable{
         }
         _file = true;
         }else{
-            String string = energy + "," + temperature + ",\n";
+            String string = energy + "," + temperature + "," + energyVariation + ",\n";
             //String str = string.replaceAll("\\.",",");
             try {
                 Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
@@ -492,4 +494,50 @@ public class Graph implements Serializable{
     public Graph getBackUp(){
         return this._backUp;
     }
+    
+    public void loadText(String myFile){
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(myFile));
+            String line;
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String [] fields = line.split(",");
+                Vertex ver = new Vertex(Integer.parseInt(fields[0]));
+                ver.setColor(Integer.parseInt(fields[0]));
+                _lVertices.add(ver);
+                String[] neighbours = fields[2].split("|");
+                for (String t : neighbours){
+                    if (Integer.parseInt(t) < i ){
+                        addEdge(ver, _lVertices.get(Integer.parseInt(t)));
+                    }
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        } catch ( IOException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    public void toJSON(){
+        String outputFile = "../output.json";
+        String output = "{\n\"nodes\": [\n";
+        for(Vertex ver : _lVertices){
+            output += ("{id :\"" + ver.getName() +"\", \"group\": " + ver.getColor() + "},\n");
+        }
+        
+        for(Vertex ver : _lVertices){
+            for(Vertex v : ver.getNeighbours()){
+                if(v.getName()>ver.getName())
+                    output += ("{source : " + ver.getName() + ", target : " + v.getName() +"},");
+            }
+        }
+        try {
+            Files.deleteIfExists(Paths.get(outputFile));
+            Files.write(Paths.get(outputFile), output.getBytes(), StandardOpenOption.CREATE);
+        }catch (IOException e) {
+            System.err.println("ERREUR");
+        }        
+    } 
 }

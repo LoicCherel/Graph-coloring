@@ -16,6 +16,6 @@ public class GraphColoring {
         graph.applySimulatedAnnealingAlgorithm();
         graph.displayColors();
 
-        System.out.println(graph);
+        graph.toJSON();
     }
 }
