@@ -58,7 +58,7 @@ public class Graph implements Serializable{
         _colors = new int[numberOfVertices];
         _nbColors = 0;
         int a;
-        float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 5 ));
+        float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 4 ));
         float prop;
         for(int i=0; i<numberOfVertices; i++) {
             _lVertices.add(new Vertex(i));
@@ -521,18 +521,33 @@ public class Graph implements Serializable{
     }
     
     public void toJSON(){
-        String outputFile = "../output.json";
-        String output = "{\n\"nodes\": [\n";
+        String outputFile = "output.json";
+        String output = "{\n  \"nodes\": [\n";
+        boolean first = true;
         for(Vertex ver : _lVertices){
-            output += ("{id :\"" + ver.getName() +"\", \"group\": " + ver.getColor() + "},\n");
+            if(first){
+                output += "\n";
+                first = false;
+            }
+            else output += ",\n";
+            
+            output += ("   {\"id\" :\"" + ver.getName() +"\", \"group\": " + ver.getColor() + "}");
         }
-        
+        output += "],\n  \"links\": [";
+        first = true;
         for(Vertex ver : _lVertices){
             for(Vertex v : ver.getNeighbours()){
-                if(v.getName()>ver.getName())
-                    output += ("{source : " + ver.getName() + ", target : " + v.getName() +"},");
+                if(v.getName()>ver.getName()){
+                    if(first){
+                        output += "\n";
+                        first = false;
+                    }
+                    else output += ",\n";
+                    output += "    {\"source\" : " + ver.getName() + ", \"target\" : " + v.getName() +"}";
+                }
             }
         }
+        output += "  ]\n}";
         try {
             Files.deleteIfExists(Paths.get(outputFile));
             Files.write(Paths.get(outputFile), output.getBytes(), StandardOpenOption.CREATE);
