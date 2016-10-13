@@ -100,8 +100,8 @@ public class Graph implements Serializable{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
         */
-        //while(temperature > 0){
-        for(int k = 0; k < 500; k++){
+        while(temperature > 0){
+        //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
             color = this.getRandomColor("allColors", A);
@@ -132,13 +132,13 @@ public class Graph implements Serializable{
             }
             else{
                 //System.out.println("The energy has not changed");
-                //temperature -= 0.1;
+                temperature -= 0.1;
             }
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            checkEnergy(energy);
-            checkTemperature(temperature);
+            storeVariables(energy, temperature);
+            System.out.println(energyVariation);
         }
     }
     
@@ -281,7 +281,7 @@ public class Graph implements Serializable{
         //else System.out.println("Valeurs nulles");
     }
 
-    private void checkEnergy(double energy) {
+    private void storeVariables(double energy, double temperature) {
         String outputFile = "../energy.csv";
         if(!_file){
             System.out.println("Creation/Vidage du fichier");
@@ -293,10 +293,10 @@ public class Graph implements Serializable{
         }
         _file = true;
         }else{
-            String string = energy + ";\n";
-            String str = string.replaceAll("\\.",",");
+            String string = energy + "," + temperature + ",\n";
+            //String str = string.replaceAll("\\.",",");
             try {
-                Files.write(Paths.get(outputFile), str.getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
@@ -482,6 +482,7 @@ public class Graph implements Serializable{
         
     public double getEnergy(){
         return 100.0 * (double)this.getNumberOfColors() + 99.0 * ((double)this.getLeastUsedColor()/(double)this.getMostUsedColor());
+        //return this.getNumberOfColors();
     }
     
     public int getNumberOfColors() {

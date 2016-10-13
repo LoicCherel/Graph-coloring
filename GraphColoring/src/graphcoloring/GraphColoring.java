@@ -11,7 +11,7 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
 
-        Graph graph = new Graph(10);
+        Graph graph = new Graph(50);
         
         graph.applySimulatedAnnealingAlgorithm();
         graph.displayColors();
