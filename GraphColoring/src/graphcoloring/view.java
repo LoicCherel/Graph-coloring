@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -26,6 +25,8 @@ public class view extends javax.swing.JFrame {
      */
     public view() {
         initComponents();
+        ImageIcon img = new ImageIcon("logo.png");
+        this.setIconImage(img.getImage());
     }
 
     /**
