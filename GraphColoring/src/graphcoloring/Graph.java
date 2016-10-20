@@ -32,11 +32,13 @@ public class Graph implements Serializable {
     private List<Vertex> _lVertices;
     //Copie du graphe
     private Graph _backUp;
+    private Graph _graphWithMinNbColors;
     //Tableau contenant toutes les couleurs du graphe en indice, et leur
     //occurence dans la case du tableau à l'indice de la couleur
     private int[] _colors;
     //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
     private int _nbColors;
+    
 
     //Compteur permettant de donner fin à la récursion de adaptNeighbours() si
     //la fonction est appelée plus de 20 fois
@@ -53,8 +55,6 @@ public class Graph implements Serializable {
             _lVertices.add(new Vertex(i));
         }
         this.colorGraph();
-        //Collections.sort(_lVertices, new Vertex(10));
-        this._lVertices.sort(new Vertex(58));
     }
 
     public Graph(int numberOfVertices) {
@@ -97,6 +97,12 @@ public class Graph implements Serializable {
         double prob;
         Vertex A;
         int color;
+        int countReachMinColors = this._lVertices.size() * 10;
+        
+        this._backUp = new Graph(this._lVertices.size());
+        this._graphWithMinNbColors = new Graph(this._lVertices.size());
+        this.setGraphWithMinNbColors();
+        this.prepareBackUp();
         //_colorsChanged = 0;
         /*Chaque passage dans cette boucle va faire cette série d'instructions:
         - on prend un sommet et une couleur au hasard
@@ -106,8 +112,7 @@ public class Graph implements Serializable {
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        while (temperature > 0) {
-            //for(int k = 0; k < 500; k++){
+        while (temperature > 0 && countReachMinColors != 0) {
             Random rn = new Random();
             A = this.getRandomVertex();
             color = this.getRandomColor("allColors", A);
@@ -131,22 +136,33 @@ public class Graph implements Serializable {
                     this.chargeBackUp();
                     //System.out.println("Changes not saved... nbOfColors = " + this.getNumberOfColors());
                 } else {
-                    //System.out.println("Changes SAVED.");
+                    //System.out.println("Changes SAVED. nbOfColors = " + this.getNumberOfColors());
                 }
-            } else if (energyVariation < 0) {
-                //System.out.println("The energy has decreased");
-            } else {
+            }
+            else if (energyVariation < 0) {
+                //System.out.println("The energy has decreased. nbOfColors = " + this.getNumberOfColors());
+            }
+            else {
                 //System.out.println("The energy has not changed");
                 /*int nbOfTries = 5;
                 while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
                 temperature -= 0.1;
             }
-            System.out.println();
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
             storeVariables(energy, temperature, energyVariation);
             //System.out.println(energyVariation);
+            if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
+                this._graphWithMinNbColors.equalsTo(this);
+                countReachMinColors = this._lVertices.size() * 8;
+            }
+            else{
+                countReachMinColors--;
+            }
+        }
+        if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
+            this.equalsTo(this._graphWithMinNbColors);
         }
     }
 
@@ -330,9 +346,12 @@ public class Graph implements Serializable {
             }
         }
     }
+    
+    public void setGraphWithMinNbColors(){
+        this._graphWithMinNbColors.equalsTo(this);
+    }
 
     public void prepareBackUp() {
-        this._backUp = new Graph(this._lVertices.size());
         this._backUp.equalsTo(this);
     }
 
@@ -487,8 +506,9 @@ public class Graph implements Serializable {
     }
 
     public double getEnergy() {
-        return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
-        //return this.getNumberOfColors();
+        //return 100.0 * (double) this.getNumberOfColors() + 99.0 *
+        //        ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
+        return this.getNumberOfColors();
     }
 
     public int getNumberOfColors() {
