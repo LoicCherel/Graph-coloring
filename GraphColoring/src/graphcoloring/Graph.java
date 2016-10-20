@@ -232,7 +232,7 @@ public class Graph implements Serializable{
         return null;
     }
     
-    /*public void charger(String nomFic){
+    public void charger(String nomFic){
         FileInputStream f = null;
         try {
             File entree = new File(nomFic);
@@ -240,7 +240,7 @@ public class Graph implements Serializable{
             ObjectInputStream in = new ObjectInputStream(f);
             _lVertices =(List<Vertex>) in.readObject();
             for(Vertex ver : _lVertices){
-                _existingColors.add(ver.getColor());
+                _colors[ver.getColor()]++;
                 
             }
             System.out.println("Apres Chargement");
@@ -257,7 +257,7 @@ public class Graph implements Serializable{
                 Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }*/
+    }
     
     public void sauvegarder(String nomFic){
         if (_lVertices.isEmpty()==false){
@@ -299,27 +299,6 @@ public class Graph implements Serializable{
             //String str = string.replaceAll("\\.",",");
             try {
                 Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
-            }catch (IOException e) {
-                //exception handling left as an exercise for the reader
-            }
-        }
-    }
-    
-    private void checkTemperature(double temperature) {
-        //System.out.println("Temperature: " + temperature);
-        if(!_fileTemp){
-            System.out.println("Creation/Vidage du fichier");
-        try {
-            Files.deleteIfExists(Paths.get("temperature.txt"));
-            Files.write(Paths.get("temperature.txt"), "".getBytes(), StandardOpenOption.CREATE);
-        }catch (IOException e) {
-            //exception handling left as an exercise for the reader
-        }
-        _fileTemp = true;
-        }else{
-            String string = temperature + "\n";
-            try {
-                Files.write(Paths.get("temperature.txt"), string.getBytes(), StandardOpenOption.APPEND);
             }catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
