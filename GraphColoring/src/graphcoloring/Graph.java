@@ -63,7 +63,7 @@ public class Graph implements Serializable {
         _colors = new int[numberOfVertices];
         _nbColors = 0;
         int a;
-        float threshold = ((float) numberOfVertices / (float) (numberOfVertices + 5));
+        float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 4 ));
         float prop;
         for (int i = 0; i < numberOfVertices; i++) {
             _lVertices.add(new Vertex(i));
@@ -237,7 +237,7 @@ public class Graph implements Serializable {
         return null;
     }
 
-    /*public void charger(String nomFic){
+    public void charger(String nomFic){
         FileInputStream f = null;
         try {
             File entree = new File(nomFic);
@@ -245,7 +245,7 @@ public class Graph implements Serializable {
             ObjectInputStream in = new ObjectInputStream(f);
             _lVertices =(List<Vertex>) in.readObject();
             for(Vertex ver : _lVertices){
-                _existingColors.add(ver.getColor());
+                _colors[ver.getColor()]++;
                 
             }
             System.out.println("Apres Chargement");
@@ -262,9 +262,10 @@ public class Graph implements Serializable {
                 Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }*/
-    public void sauvegarder(String nomFic) {
-        if (_lVertices.isEmpty() == false) {
+    }
+        
+    public void sauvegarder(String nomFic){
+        if (_lVertices.isEmpty()==false){
             FileOutputStream f = null;
             try {
                 File sortie = new File(nomFic);
@@ -522,21 +523,35 @@ public class Graph implements Serializable {
             Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public void toJSON() {
-        String outputFile = "../output.json";
-        String output = "{\n\"nodes\": [\n";
-        for (Vertex ver : _lVertices) {
-            output += ("{id :\"" + ver.getName() + "\", \"group\": " + ver.getColor() + "},\n");
+    
+    public void toJSON(){
+        String outputFile = "output.json";
+        String output = "{\n  \"nodes\": [\n";
+        boolean first = true;
+        for(Vertex ver : _lVertices){
+            if(first){
+                output += "\n";
+                first = false;
+            }
+            else output += ",\n";
+            
+            output += ("   {\"id\" :\"" + ver.getName() +"\", \"group\": " + ver.getColor() + "}");
         }
-
-        for (Vertex ver : _lVertices) {
-            for (Vertex v : ver.getNeighbours()) {
-                if (v.getName() > ver.getName()) {
-                    output += ("{source : " + ver.getName() + ", target : " + v.getName() + "},");
+        output += "],\n  \"links\": [";
+        first = true;
+        for(Vertex ver : _lVertices){
+            for(Vertex v : ver.getNeighbours()){
+                if(v.getName()>ver.getName()){
+                    if(first){
+                        output += "\n";
+                        first = false;
+                    }
+                    else output += ",\n";
+                    output += "    {\"source\" : " + ver.getName() + ", \"target\" : " + v.getName() +"}";
                 }
             }
         }
+        output += "  ]\n}";
         try {
             Files.deleteIfExists(Paths.get(outputFile));
             Files.write(Paths.get(outputFile), output.getBytes(), StandardOpenOption.CREATE);
