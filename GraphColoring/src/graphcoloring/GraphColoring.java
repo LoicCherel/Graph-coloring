@@ -11,11 +11,12 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
 
-        Graph graph = new Graph(50);
+        Graph graph = new Graph(20);
+        System.out.println(graph);
         
-        graph.applySimulatedAnnealingAlgorithm();
+        /*graph.applySimulatedAnnealingAlgorithm();
         graph.displayColors();
 
-        graph.toJSON();
+        graph.toJSON();*/
     }
 }

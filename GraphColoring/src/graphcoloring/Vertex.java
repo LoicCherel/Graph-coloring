@@ -3,12 +3,13 @@ package graphcoloring;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 /**
  *
  * @author p1401687
  */
-public class Vertex implements Serializable{
+public class Vertex implements Serializable, Comparator<Vertex>{
     
     private List<Vertex> _lNeighbour;
     private int _color;
@@ -68,4 +69,9 @@ public class Vertex implements Serializable{
         vertex += "\n";
         return vertex;
     }
+    
+    @Override
+   public int compare(Vertex v1, Vertex v2) {
+      return v1._lNeighbour.size() - v2._lNeighbour.size();
+   }
 }
