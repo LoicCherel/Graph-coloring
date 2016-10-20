@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
  */
 public class view extends javax.swing.JFrame {
     
-    Graph graph;
+    GraphARS graph;
     
     /**
      * Creates new form view
@@ -177,7 +177,7 @@ public class view extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        graph = new Graph((Integer.parseInt(jTextField1.getText())));
+        graph = new GraphARS((Integer.parseInt(jTextField1.getText())));
         unlockButtons();
         update();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -187,7 +187,7 @@ public class view extends javax.swing.JFrame {
         if (returnVal == jFileChooser.APPROVE_OPTION) {
             File file = jFileChooser.getSelectedFile();
             System.out.println(file.getName());
-            graph = new Graph();
+            graph = new GraphARS();
             //graph.charger(file.getName());
             unlockButtons();
             update();

@@ -43,7 +43,8 @@ public class Vertex implements Serializable, Comparator<Vertex>{
     }
 
     void addNeighbour(Vertex b) {
-        this._lNeighbour.add(b);
+        if (!_lNeighbour.contains(b))
+            this._lNeighbour.add(b);
     }
     
     boolean isNeighbour(int nameVertex){
