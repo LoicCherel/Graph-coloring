@@ -58,7 +58,7 @@ public class Graph implements Serializable {
         }
     }
 
-    private void addEdge(Vertex a, Vertex b) {
+    public void addEdge(Vertex a, Vertex b) {
         a.addNeighbour(b);
         b.addNeighbour(a);
     }
