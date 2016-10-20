@@ -19,13 +19,15 @@ import static java.lang.Math.exp;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-
+import java.util.Comparator;
+import java.util.Collections;
 
 /**
  *
  * @authors: Loïc Cherel, Thomas Raynaud, Wilians Rodulfo
  */
-public class Graph implements Serializable{
+public class Graph implements Serializable {
+
     //Liste des sommets du graphe
     private List<Vertex> _lVertices;
     //Copie du graphe
@@ -35,23 +37,26 @@ public class Graph implements Serializable{
     private int[] _colors;
     //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
     private int _nbColors;
-    
+
     //Compteur permettant de donner fin à la récursion de adaptNeighbours() si
     //la fonction est appelée plus de 20 fois
     private static int _colorsChanged = 0;
     private static boolean _file = false;
     private static boolean _fileTemp = false;
+    private static final int TEMPERATUREMAX = 100;
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
         _colors = new int[5];
         _nbColors = 0;
-        for(int i=0; i< 6 ; i++) {
+        for (int i = 0; i < 6; i++) {
             _lVertices.add(new Vertex(i));
         }
         this.colorGraph();
+        //Collections.sort(_lVertices, new Vertex(10));
+        this._lVertices.sort(new Vertex(58));
     }
-    
+
     public Graph(int numberOfVertices) {
         Random rn = new Random();
         _lVertices = new ArrayList<Vertex>();
@@ -60,40 +65,39 @@ public class Graph implements Serializable{
         int a;
         float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 4 ));
         float prop;
-        for(int i=0; i<numberOfVertices; i++) {
+        for (int i = 0; i < numberOfVertices; i++) {
             _lVertices.add(new Vertex(i));
         }
         int count = 0;
-        for (Vertex ver : _lVertices){
+        for (Vertex ver : _lVertices) {
             count++;
-            for(int i=count; i<numberOfVertices; i++) {
-                a = rn.nextInt(numberOfVertices+1);
-                prop = (float)a / (float)numberOfVertices;
+            for (int i = count; i < numberOfVertices; i++) {
+                a = rn.nextInt(numberOfVertices + 1);
+                prop = (float) a / (float) numberOfVertices;
                 //System.out.println(prop);
-                if (prop >= threshold){
-                    addEdge(ver,_lVertices.get(i));
+                if (prop >= threshold) {
+                    addEdge(ver, _lVertices.get(i));
                 }
             }
         }
         this.colorGraph();
     }
-    
+
     /**
-     * Appliquer l'algorithme du recuit simulé sur le graphe.
-     * On itère sur cet algorithme jusqu'à ce que la température du "système"
-     * soit égale à zéro. La température diminue si l'énergie du système a
-     * diminuée
+     * Appliquer l'algorithme du recuit simulé sur le graphe. On itère sur cet
+     * algorithme jusqu'à ce que la température du "système" soit égale à zéro.
+     * La température diminue si l'énergie du système a diminuée
      */
-    public void applySimulatedAnnealingAlgorithm(){
+    public void applySimulatedAnnealingAlgorithm() {
         //Initialisation de la température et de l'énergie
-        double temperature = 100;
+        double temperature = TEMPERATUREMAX;
         double energy = this.getEnergy();
         double oldEnergy = energy;
         double energyVariation;
         double prob;
         Vertex A;
         int color;
-        _colorsChanged = 0;
+        //_colorsChanged = 0;
         /*Chaque passage dans cette boucle va faire cette série d'instructions:
         - on prend un sommet et une couleur au hasard
         - on change la couleur du sommet avec la nouvelle couleur choisie
@@ -101,13 +105,13 @@ public class Graph implements Serializable{
         changement avec une certaine probabilité
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
-        */
-        while(temperature > 0){
-        //for(int k = 0; k < 500; k++){
+         */
+        while (temperature > 0) {
+            //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
             color = this.getRandomColor("allColors", A);
-            if (color == -1){
+            if (color == -1) {
                 continue;
             }
             //On fait une copie du graphe avant les changements
@@ -117,25 +121,27 @@ public class Graph implements Serializable{
             energyVariation = oldEnergy - energy;
             //Si l'énergie a augmenté, on rentre dans cette condition
             if (energyVariation > 0) {
-                    //Calcul de la probabilité de carder le changement
-                    prob = exp((-1 * energyVariation) / temperature);
-                    //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
-                    if (rn.nextDouble() > prob ){
-                        //Changement annulé. On reprend la copie du graphe
-                        this.chargeBackUp();
-                        //System.out.println("Changes not saved... energy = " + this.getNumberOfColors());
-                    }
-                    else{
-                        //System.out.println("Changes SAVED");
-                    }
-            }
-            else if (energyVariation < 0){
-                    //System.out.println("The energy has decreased");
-            }
-            else{
+                //Calcul de la probabilité de carder le changement
+                prob = exp((-1 * energyVariation) / temperature);
+                //System.out.println("Energy: " + energy + ", temperature: "
+                //        + temperature + ", var(Energy):" + energyVariation + ", prob: " + prob);
+                //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
+                if (rn.nextDouble() > prob) {
+                    //Changement annulé. On reprend la copie du graphe
+                    this.chargeBackUp();
+                    //System.out.println("Changes not saved... nbOfColors = " + this.getNumberOfColors());
+                } else {
+                    //System.out.println("Changes SAVED.");
+                }
+            } else if (energyVariation < 0) {
+                //System.out.println("The energy has decreased");
+            } else {
                 //System.out.println("The energy has not changed");
+                /*int nbOfTries = 5;
+                while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
                 temperature -= 0.1;
             }
+            System.out.println();
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
@@ -143,9 +149,9 @@ public class Graph implements Serializable{
             //System.out.println(energyVariation);
         }
     }
-    
+
     /**
-     * 
+     *
      * @param A est le sommet auquel on change la couleur
      * @param color est la couleur donnée au sommet A
      * @return 1 s'il n'y a eu aucun problème, -1 sinon
@@ -158,80 +164,79 @@ public class Graph implements Serializable{
         //aussi le nombre de couleurs existantes
         A.setColor(color);
         this._colors[color]++;
-        if(this._colors[color] == 1){
+        if (this._colors[color] == 1) {
             this._nbColors++;
         }
         //Il faut adapter les voisins du sommet A au changement de couleur.
         int continueColorChanges = this.adaptNeighbours(A);
-        if(continueColorChanges == -1){
+        if (continueColorChanges == -1) {
             //System.out.println("Error: the colors cannot be changed anymore");
             this.chargeBackUp();
             return -1;
-        }
-        else if(continueColorChanges == -2){
+        } else if (continueColorChanges == -2) {
             return -1;
         }
         //System.out.println(this);
         //this.displayColors();
         return 1;
-    }    
-    
-    public int adaptNeighbours(Vertex A){
-        for(Vertex neighbour : A.getNeighbours()){
-            if (A.getColor() == neighbour.getColor()){
+    }
+
+    public int adaptNeighbours(Vertex A) {
+        for (Vertex neighbour : A.getNeighbours()) {
+            if (A.getColor() == neighbour.getColor()) {
                 _colorsChanged++;
-                if(_colorsChanged >= 30){
+                if (_colorsChanged >= 30) {
                     _colorsChanged = 0;
                     return -1;
                 }
                 int color = this.getRandomColor("allColors", A);
-                if (color == -1){
+                if (color == -1) {
                     //System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
                     this.chargeBackUp();
                     return -2;
                 }
                 int continueColorChanges = this.changeColor(neighbour, color);
-                if (continueColorChanges == -1){
+                if (continueColorChanges == -1) {
                     return -2;
                 }
             }
         }
         return 1;
     }
-    
-    public void colorGraph(){
+
+    public void colorGraph() {
         int color = 0;
-        for(Vertex ver : _lVertices){
+        for (Vertex ver : _lVertices) {
             ver.setColor(color);
             this._colors[color] = 1;
             color++;
             this._nbColors++;
         }
     }
-    
-    private void eraseVertexColor(Vertex a){
+
+    private void eraseVertexColor(Vertex a) {
         int deletedColor = a.getColor();
         a.setColor(-1);
         this._colors[deletedColor]--;
-        if(this._colors[deletedColor] == 0){
+        if (this._colors[deletedColor] == 0) {
             this._nbColors--;
         }
     }
-    
+
     private void addEdge(Vertex a, Vertex b) {
         a.addNeighbour(b);
         b.addNeighbour(a);
     }
-    
-    private Vertex findVertex(int nameVertex){
-        for(int i = 0; i < this._lVertices.size(); i++){
-            if (this._lVertices.get(i).getName() == nameVertex){
+
+    private Vertex findVertex(int nameVertex) {
+        for (int i = 0; i < this._lVertices.size(); i++) {
+            if (this._lVertices.get(i).getName() == nameVertex) {
                 return this._lVertices.get(i);
             }
         }
         return null;
     }
-    
+
     public void charger(String nomFic){
         FileInputStream f = null;
         try {
@@ -258,7 +263,7 @@ public class Graph implements Serializable{
             }
         }
     }
-    
+        
     public void sauvegarder(String nomFic){
         if (_lVertices.isEmpty()==false){
             FileOutputStream f = null;
@@ -285,77 +290,99 @@ public class Graph implements Serializable{
 
     private void storeVariables(double energy, double temperature, double energyVariation) {
         String outputFile = "../energy.csv";
-        if(!_file){
+        if (!_file) {
             System.out.println("Creation/Vidage du fichier");
-        try {
-            Files.deleteIfExists(Paths.get(outputFile));
-            Files.write(Paths.get(outputFile), "".getBytes(), StandardOpenOption.CREATE);
-        }catch (IOException e) {
-            //exception handling left as an exercise for the reader
-        }
-        _file = true;
-        }else{
+            try {
+                Files.deleteIfExists(Paths.get(outputFile));
+                Files.write(Paths.get(outputFile), "".getBytes(), StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+            _file = true;
+        } else {
             String string = energy + "," + temperature + "," + energyVariation + ",\n";
             //String str = string.replaceAll("\\.",",");
             try {
                 Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
-            }catch (IOException e) {
+            } catch (IOException e) {
                 //exception handling left as an exercise for the reader
             }
         }
     }
-    
-    public void prepareBackUp(){
+
+    private void checkTemperature(double temperature) {
+        //System.out.println("Temperature: " + temperature);
+        if (!_fileTemp) {
+            System.out.println("Creation/Vidage du fichier");
+            try {
+                Files.deleteIfExists(Paths.get("temperature.txt"));
+                Files.write(Paths.get("temperature.txt"), "".getBytes(), StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+            _fileTemp = true;
+        } else {
+            String string = temperature + "\n";
+            try {
+                Files.write(Paths.get("temperature.txt"), string.getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
+    }
+
+    public void prepareBackUp() {
         this._backUp = new Graph(this._lVertices.size());
         this._backUp.equalsTo(this);
     }
 
-    public void chargeBackUp(){
+    public void chargeBackUp() {
         this.equalsTo(this.getBackUp());
     }
-    
-    public void equalsTo(Graph graph){
-        for(int i = 0; i < graph._lVertices.size(); i++){
+
+    public void equalsTo(Graph graph) {
+        for (int i = 0; i < graph._lVertices.size(); i++) {
             this._lVertices.get(i).setColor(graph._lVertices.get(i).getColor());
             this._lVertices.get(i).setName(graph._lVertices.get(i).getName());
             this._lVertices.get(i).getNeighbours().clear();
         }
-        for(int i = 0; i < graph._lVertices.size(); i++){
-            for(int j = 0; j < graph._lVertices.get(i).getNeighbours().size(); j++){
+        for (int i = 0; i < graph._lVertices.size(); i++) {
+            for (int j = 0; j < graph._lVertices.get(i).getNeighbours().size(); j++) {
                 int nameNeighbour = graph._lVertices.get(i).getNeighbours().get(j).getName();
                 this._lVertices.get(i).addNeighbour(this.findVertex(nameNeighbour));
             }
         }
-        for(int i = 0; i < graph._colors.length; i++){
+        for (int i = 0; i < graph._colors.length; i++) {
             this._colors[i] = graph._colors[i];
         }
         this._nbColors = graph._nbColors;
     }
-    
-    public void displayGraph(){
-        for(Vertex ver : _lVertices){
-            System.out.println("{id :" + ver.getName() +"},");
+
+    public void displayGraph() {
+        for (Vertex ver : _lVertices) {
+            System.out.println("{id :" + ver.getName() + "},");
         }
-        
-        for(Vertex ver : _lVertices){
-            for(Vertex v : ver.getNeighbours()){
-                if(v.getName()>ver.getName())
-                    System.out.println("{source : " + ver.getName() + ", target : " + v.getName() +"},");
+
+        for (Vertex ver : _lVertices) {
+            for (Vertex v : ver.getNeighbours()) {
+                if (v.getName() > ver.getName()) {
+                    System.out.println("{source : " + ver.getName() + ", target : " + v.getName() + "},");
+                }
             }
         }
     }
-    
-    public void displayColors(){
+
+    public void displayColors() {
         int existingColors[] = this.getGroupOfColors("allColors", null);
-        if(existingColors == null){
+        if (existingColors == null) {
             System.out.println("ERROR");
         }
         int arrayIndex = 0;
-        for(int i = 0; i < this._colors.length; i++){
-            if(i == existingColors[arrayIndex]){
+        for (int i = 0; i < this._colors.length; i++) {
+            if (i == existingColors[arrayIndex]) {
                 System.out.println("Color = " + i + ", frequency = " + this._colors[i]);
                 arrayIndex++;
-            }  
+            }
         }
     }
 
@@ -363,22 +390,22 @@ public class Graph implements Serializable{
     public String toString() {
         String graph = "";
         for (int i = 0; i < this._lVertices.size(); i++) {
-            graph += this._lVertices.get(i).toString()+ "\n";
+            graph += this._lVertices.get(i).toString() + "\n";
         }
         return graph;
     }
-    
+
     public Vertex getRandomVertex() {
         Random randomVertex = new Random();
         int vertexIndex = randomVertex.nextInt(this._lVertices.size());
         return this._lVertices.get(vertexIndex);
     }
-    
+
     /**
-    *
-    */
-    private int getRandomColor(String groupOfColorsDescription, Vertex A){
-        
+     *
+     */
+    private int getRandomColor(String groupOfColorsDescription, Vertex A) {
+
         //On crée tout d'abord un tableau temporaire contenant que les couleurs
         //souhaitées. Cela évite de chercher plusieurs fois une couleur au
         //hasard dans toutes les couleurs jusqu'à ce que l'on tombe sur une
@@ -387,116 +414,114 @@ public class Graph implements Serializable{
         int[] groupOfColors = this.getGroupOfColors(groupOfColorsDescription, A);
         Random rn = new Random();
         //S'il n'y a pas de couleur supprimée, on arrête la fonction
-        if(groupOfColors == null){
+        if (groupOfColors == null) {
             return -1;
         }
         //On retourne un élément du tableau au hasard
         return groupOfColors[rn.nextInt(groupOfColors.length)];
     }
-    
-    public int[] getGroupOfColors(String specifiedGroup, Vertex A)
-    {
+
+    public int[] getGroupOfColors(String specifiedGroup, Vertex A) {
         int arraySize;
         int arrayIndex = 0;
         int vertexColor = -1;
-        if(specifiedGroup == "existingColors"){
-            if(A != null){
+        if (specifiedGroup == "existingColors") {
+            if (A != null) {
                 vertexColor = A.getColor();
                 arraySize = this.getNumberOfColors() - 1;
-            }
-            else{
+            } else {
                 arraySize = this.getNumberOfColors();
             }
-        }
-        else if(specifiedGroup == "deletedColors"){
+        } else if (specifiedGroup == "deletedColors") {
             arraySize = this._colors.length - this.getNumberOfColors();
-        }
-        else if(specifiedGroup == "allColors"){
-            if (A == null){
+        } else if (specifiedGroup == "allColors") {
+            if (A == null) {
                 vertexColor = -1;
                 arraySize = this._colors.length;
-            }
-            else{
+            } else {
                 vertexColor = A.getColor();
                 arraySize = this._colors.length - 1;
             }
+        } else {
+            return null;
         }
-        else return null;
-        if (arraySize == 0) return null;
+        if (arraySize == 0) {
+            return null;
+        }
         int[] groupOfColors = new int[arraySize];
-        for(int i = 0; i < this._colors.length; i++){
-            if(arrayIndex < groupOfColors.length && ((specifiedGroup == "existingColors" && this._colors[i] > 0 && i != vertexColor) || (specifiedGroup == "deletedColors" && this._colors[i] == 0) || (specifiedGroup == "allColors" && i != vertexColor))){
+        for (int i = 0; i < this._colors.length; i++) {
+            if (arrayIndex < groupOfColors.length && ((specifiedGroup == "existingColors" && this._colors[i] > 0 && i != vertexColor) || (specifiedGroup == "deletedColors" && this._colors[i] == 0) || (specifiedGroup == "allColors" && i != vertexColor))) {
                 groupOfColors[arrayIndex] = i;
                 arrayIndex++;
             }
         }
         return groupOfColors;
     }
-    
-    public int getLeastUsedColor(){
+
+    public int getLeastUsedColor() {
         int[] existingColors = this.getGroupOfColors("existingColors", null);
-        if(existingColors == null){
+        if (existingColors == null) {
             return -1;
         }
         int leastUsedColor = this._colors[existingColors[0]];
-        for(int i = 0; i < existingColors.length; i++){
-            if(this._colors[existingColors[i]] < leastUsedColor && this._colors[existingColors[i]] > 0){
+        for (int i = 0; i < existingColors.length; i++) {
+            if (this._colors[existingColors[i]] < leastUsedColor && this._colors[existingColors[i]] > 0) {
                 leastUsedColor = i;
             }
         }
         return leastUsedColor;
     }
-    
-    public int getMostUsedColor(){
+
+    public int getMostUsedColor() {
         int[] existingColors = this.getGroupOfColors("existingColors", null);
-        if(existingColors == null){
+        if (existingColors == null) {
             return -1;
         }
         int mostUsedColor = this._colors[existingColors[0]];
-        for(int i = 0; i < existingColors.length; i++){
-            if(this._colors[existingColors[i]] > mostUsedColor && this._colors[existingColors[i]] > 0){
+        for (int i = 0; i < existingColors.length; i++) {
+            if (this._colors[existingColors[i]] > mostUsedColor && this._colors[existingColors[i]] > 0) {
                 mostUsedColor = i;
             }
         }
         return mostUsedColor;
     }
-        
-    public double getEnergy(){
-        return 100.0 * (double)this.getNumberOfColors() + 99.0 * ((double)this.getLeastUsedColor()/(double)this.getMostUsedColor());
+
+    public double getEnergy() {
+        return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
         //return this.getNumberOfColors();
     }
-    
+
     public int getNumberOfColors() {
         return this._nbColors;
     }
-    
-    public Graph getBackUp(){
+
+    public Graph getBackUp() {
         return this._backUp;
     }
-    
-    public void loadText(String myFile){
+
+    public void loadText(String myFile) {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(myFile));
             String line;
             int i = 0;
             while ((line = br.readLine()) != null) {
-                String [] fields = line.split(",");
+                String[] fields = line.split(",");
                 Vertex ver = new Vertex(Integer.parseInt(fields[0]));
                 ver.setColor(Integer.parseInt(fields[0]));
                 _lVertices.add(ver);
                 String[] neighbours = fields[2].split("|");
-                for (String t : neighbours){
-                    if (Integer.parseInt(t) < i ){
+                for (String t : neighbours) {
+                    if (Integer.parseInt(t) < i) {
                         addEdge(ver, _lVertices.get(Integer.parseInt(t)));
                     }
                 }
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
-        } catch ( IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
     
     public void toJSON(){
@@ -530,8 +555,8 @@ public class Graph implements Serializable{
         try {
             Files.deleteIfExists(Paths.get(outputFile));
             Files.write(Paths.get(outputFile), output.getBytes(), StandardOpenOption.CREATE);
-        }catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("ERREUR");
-        }        
-    } 
+        }
+    }
 }
