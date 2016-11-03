@@ -20,6 +20,7 @@ public class GraphARS extends Graph{
     
     //Copie du graphe
     private GraphARS _backUp;
+    private GraphARS _graphWithMinNbColors;
     //Tableau contenant toutes les couleurs du graphe en indice, et leur
     //occurence dans la case du tableau à l'indice de la couleur
     private int[] _colors;
@@ -41,7 +42,7 @@ public class GraphARS extends Graph{
         super(numberOfVertices);
         _colors = new int[numberOfVertices];
         _nbColors = 0;
-        colorGraph();
+        this.colorGraph();
     }
 
     public void colorGraph() {
@@ -68,6 +69,12 @@ public class GraphARS extends Graph{
         double prob;
         Vertex A;
         int color;
+        int countReachMinColors = this._lVertices.size() * 10;
+        
+        this._backUp = new GraphARS(this._lVertices.size());
+        this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
+        this.setGraphWithMinNbColors();
+        this.prepareBackUp();
         //_colorsChanged = 0;
         /*Chaque passage dans cette boucle va faire cette série d'instructions:
         - on prend un sommet et une couleur au hasard
@@ -77,7 +84,7 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        while (temperature > 0) {
+        while (temperature > 0 && countReachMinColors != 0) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
@@ -118,6 +125,16 @@ public class GraphARS extends Graph{
             //l'efficacité de l'algorithme
             storeVariables(energy, temperature, energyVariation);
             //System.out.println(energyVariation);
+            if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
+                this._graphWithMinNbColors.equalsTo(this);
+                countReachMinColors = this._lVertices.size() * 8;
+            }
+            else{
+                countReachMinColors--;
+            }
+        }
+        if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
+            this.equalsTo(this._graphWithMinNbColors);
         }
     }
 
@@ -206,8 +223,11 @@ public class GraphARS extends Graph{
         }
     }
 
+    public void setGraphWithMinNbColors(){
+        this._graphWithMinNbColors.equalsTo(this);
+    }
+
     public void prepareBackUp() {
-        this._backUp = new GraphARS(this._lVertices.size());
         this._backUp.equalsTo(this);
     }
 
@@ -340,8 +360,8 @@ public class GraphARS extends Graph{
     }
 
     public double getEnergy() {
-        return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
-        //return this.getNumberOfColors();
+        //return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
+        return this.getNumberOfColors();
     }
 
     public int getNumberOfColors() {

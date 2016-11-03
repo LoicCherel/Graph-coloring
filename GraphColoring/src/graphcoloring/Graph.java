@@ -117,7 +117,7 @@ public class Graph implements Serializable {
         }
         //else System.out.println("Valeurs nulles");
     }
-
+    
     public void displayGraph() {
         for (Vertex ver : _lVertices) {
             System.out.println("{id :" + ver.getName() + "},");
