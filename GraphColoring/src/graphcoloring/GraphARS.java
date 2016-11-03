@@ -41,6 +41,7 @@ public class GraphARS extends Graph{
         super(numberOfVertices);
         _colors = new int[numberOfVertices];
         _nbColors = 0;
+        colorGraph();
     }
 
     public void colorGraph() {
