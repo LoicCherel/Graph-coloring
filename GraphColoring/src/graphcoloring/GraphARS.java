@@ -21,6 +21,7 @@ public class GraphARS extends Graph{
     //Copie du graphe
     private GraphARS _backUp;
     private GraphARS _graphWithMinNbColors;
+    private double _temperature;
     //Tableau contenant toutes les couleurs du graphe en indice, et leur
     //occurence dans la case du tableau à l'indice de la couleur
     private int[] _colors;
@@ -62,14 +63,14 @@ public class GraphARS extends Graph{
      */
     public void applySimulatedAnnealingAlgorithm() {
         //Initialisation de la température et de l'énergie
-        double temperature = TEMPERATUREMAX;
+        this._temperature = TEMPERATUREMAX;
         double energy = this.getEnergy();
         double oldEnergy = energy;
         double energyVariation;
         double prob;
         Vertex A;
         int color;
-        int countReachMinColors = this._lVertices.size() * 10;
+        int countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
         
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
@@ -84,7 +85,7 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        while (temperature > 0 && countReachMinColors != 0) {
+        while (this._temperature > 0) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
@@ -99,8 +100,8 @@ public class GraphARS extends Graph{
             energyVariation = oldEnergy - energy;
             //Si l'énergie a augmenté, on rentre dans cette condition
             if (energyVariation > 0) {
-                //Calcul de la probabilité de carder le changement
-                prob = exp((-1 * energyVariation) / temperature);
+                //Calcul de la probabilité de garder le changement
+                prob = exp((-1 * energyVariation) / this._temperature);
                 //System.out.println("Energy: " + energy + ", temperature: "
                 //        + temperature + ", var(Energy):" + energyVariation + ", prob: " + prob);
                 //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
@@ -117,17 +118,20 @@ public class GraphARS extends Graph{
                 //System.out.println("The energy has not changed");
                 /*int nbOfTries = 5;
                 while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
-                temperature -= 0.1;
+                this._temperature -= 0.1;
             }
             
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            storeVariables(energy, temperature, energyVariation);
-            //System.out.println(energyVariation);
+            storeVariables(energy, this._temperature, energyVariation);
+            //System.out.println(energyVariation); 
             if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
                 this._graphWithMinNbColors.equalsTo(this);
-                countReachMinColors = this._lVertices.size() * 8;
+                countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
+            }
+            if(countReachMinColors == 0){
+                countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
             }
             else{
                 countReachMinColors--;
