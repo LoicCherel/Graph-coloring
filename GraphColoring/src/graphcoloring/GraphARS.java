@@ -372,5 +372,11 @@ public class GraphARS extends Graph{
         return this._backUp;
     }
 
-    
+    /**
+     *
+     */
+    @Override
+    public void launchAlgorithm(){
+        applySimulatedAnnealingAlgorithm();
+    }
 }

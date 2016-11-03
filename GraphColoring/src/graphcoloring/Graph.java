@@ -207,4 +207,12 @@ public class Graph implements Serializable {
             System.err.println("ERREUR");
         }
     }
+    
+    public void launchAlgorithm(){
+        System.out.println("No algoritm selected");
+    }
+    
+    public int getNumberOfColors() {
+        return _lVertices.size();
+    }
 }
