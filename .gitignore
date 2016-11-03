@@ -1,1 +1,3 @@
-/GraphColoring/build/
+/GraphColoring/build/*
+/energy.csv
+/GraphColoring/output.json
