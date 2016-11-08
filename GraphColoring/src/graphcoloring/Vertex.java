@@ -35,11 +35,6 @@ public class Vertex implements Serializable, Comparator<Vertex>{
         _color = -1;
         _name = name;
     }
-
-    Vertex() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     
     public int getName()
     {
@@ -57,64 +52,21 @@ public class Vertex implements Serializable, Comparator<Vertex>{
     public void setColor(int color) {
         this._color = color;
     }
-
-    public List<Vertex> getlNeighbour() {
-        return _lNeighbour;
-    }
     
-    
-    
-    /** Liste des sommets adjacents à ce sommet */
-    private List<Vertex> adjacentVertex = new ArrayList<Vertex>();
     
     	/** Est le point d'entrée du graphe ? */
 	// private boolean source = false;
 	/** Est ce sommet selectionné ? */
     private boolean actif = false;
-    
-    	/**
-	 * @description : ajoute un nouveau sommet adjacent à ce sommet
-	 * @param vertex
-	 */
-	public void addAdjacentVertex(Vertex vertex) {
-		adjacentVertex.add(vertex);
-	}
-
-	/**
-     * @param vertex
-	 * @description : supprime un sommet adjacent à ce sommet
-	 * @param vertex
-	 */
-        
-	public void removeAdjacentVertex(Vertex vertex) {
-		adjacentVertex.remove(vertex);
-	}
-
-	/**
-	 * @description : vérifie si le sommet fourni est adjacent à ce sommet
-	 * @return Vertex
-	 */
-        
-	public boolean isAdjacent(Vertex vertex) {
-		return adjacentVertex.contains(vertex);
-	}
 
 	/**
 	 * @description : permet de savoir le degré du sommet
 	 * @return
 	 */
 	public int getDegre() {
-		return adjacentVertex.size();
+		return this._lNeighbour.size();
 }
-    
-    public String getLabel() {
-        return _label;
-    }
-
-    public void setLabel(String _label) {
-        this._label = _label;
-    }
-
+        
     public int getRang() {
         return _rang;
     }
@@ -123,16 +75,6 @@ public class Vertex implements Serializable, Comparator<Vertex>{
         this._rang = _rang;
     }
     
-    
-    
-    public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((_label == null) ? 0 : _label.hashCode());
-		return result;
-}
-    
     public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -140,11 +82,8 @@ public class Vertex implements Serializable, Comparator<Vertex>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vertex other = (Vertex) obj;
-		if (_label == null) {
-			if (other._label != null)
-				return false;
-		} else if (!_label.equals(other._label))
+                Vertex other = (Vertex) obj;
+		if (_name != other.getName())
 			return false;
 		return true;
 	}
