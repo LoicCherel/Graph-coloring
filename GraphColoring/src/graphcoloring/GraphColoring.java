@@ -13,6 +13,7 @@ public class GraphColoring {
         GraphARS graph = new GraphARS(100);
         graph.applySimulatedAnnealingAlgorithm();
         System.out.println(graph);
+       // System.out.println(graph);
         graph.toJSON();
     }
 }

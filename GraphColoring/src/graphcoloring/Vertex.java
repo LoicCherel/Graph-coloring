@@ -12,9 +12,24 @@ import java.util.Comparator;
 public class Vertex implements Serializable, Comparator<Vertex>{
     
     private List<Vertex> _lNeighbour;
+
+    
     private int _color;
     private int _name;
-
+    
+    //Variables Welsh&Powell
+    
+    	/** Etiquette relative à ce sommet et visible à l'utilisateur */
+    private String _label;
+    /**
+	 * Rang qu'occupe ce sommet après le tri par rapport au nombre de sommets
+	 * adjacents
+	 */
+    
+    
+    private int _rang;
+    
+    
     public Vertex(int name) {
         _lNeighbour = new ArrayList<Vertex>();
         _color = -1;
@@ -37,6 +52,43 @@ public class Vertex implements Serializable, Comparator<Vertex>{
     public void setColor(int color) {
         this._color = color;
     }
+    
+    
+    	/** Est le point d'entrée du graphe ? */
+	// private boolean source = false;
+	/** Est ce sommet selectionné ? */
+    private boolean actif = false;
+
+	/**
+	 * @description : permet de savoir le degré du sommet
+	 * @return
+	 */
+	public int getDegre() {
+		return this._lNeighbour.size();
+}
+        
+    public int getRang() {
+        return _rang;
+    }
+
+    public void setRang(int _rang) {
+        this._rang = _rang;
+    }
+    
+    public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+                Vertex other = (Vertex) obj;
+		if (_name != other.getName())
+			return false;
+		return true;
+	}
+
+    
     
     public List<Vertex> getNeighbours(){
         return _lNeighbour;
@@ -75,4 +127,6 @@ public class Vertex implements Serializable, Comparator<Vertex>{
    public int compare(Vertex v1, Vertex v2) {
       return v1._lNeighbour.size() - v2._lNeighbour.size();
    }
+
+
 }
