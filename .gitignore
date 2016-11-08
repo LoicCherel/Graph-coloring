@@ -1,3 +1,5 @@
 /GraphColoring/build/*
 /energy.csv
 /GraphColoring/output.json
+/GraphColoring/dist/*
+/GraphColoring/nbproject/private/*
