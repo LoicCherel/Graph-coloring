@@ -33,6 +33,7 @@ public class GraphARS extends Graph{
     private static int _colorsChanged = 0;
     private static boolean _file = false;
     private static final int TEMPERATUREMAX = 100;
+    private static final int X = 15;
 
     public GraphARS() {
         _colors = new int[5];
@@ -70,7 +71,8 @@ public class GraphARS extends Graph{
         double prob;
         Vertex A;
         int color;
-        int countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
+        int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
+        int step = 0, stepMax = 10;
         
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
@@ -124,22 +126,27 @@ public class GraphARS extends Graph{
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            storeVariables(energy, this._temperature, energyVariation);
+            if(step == stepMax){
+                storeVariables(energy, this._temperature, energyVariation);
+                step = 0;
+            }
             //System.out.println(energyVariation); 
             if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
                 this._graphWithMinNbColors.equalsTo(this);
-                countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
+                countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
             }
             if(countReachMinColors == 0){
-                countReachMinColors = this._lVertices.size() * (int)this._temperature * 6;
+                countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
             }
             else{
                 countReachMinColors--;
             }
+            step++;
         }
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.equalsTo(this._graphWithMinNbColors);
         }
+        storeVariables(energy, this._temperature, 0);
     }
 
     /**
@@ -175,18 +182,21 @@ public class GraphARS extends Graph{
 
     public int adaptNeighbours(Vertex A) {
         for (Vertex neighbour : A.getNeighbours()) {
+            //Si A a la même couleur qu'un de ses 
             if (A.getColor() == neighbour.getColor()) {
                 _colorsChanged++;
-                if (_colorsChanged >= 100) {
+                if (_colorsChanged >= this._lVertices.size() * 10) {
                     _colorsChanged = 0;
                     return -1;
                 }
                 int color = this.getRandomColor("allColors", A);
+                //Cas dans lequel il n'y a plus qu'une couleur dans le graphe.
+                //La couleur ne peut alors plus être changée
                 if (color == -1) {
-                    //System.out.println("Error: the color of the vertex cannot be changed: only one color exists in the graph");
                     this.chargeBackUp();
                     return -2;
                 }
+                //On arrête de changer de couleurs
                 int continueColorChanges = this.changeColor(neighbour, color);
                 if (continueColorChanges == -1) {
                     return -2;
@@ -217,7 +227,7 @@ public class GraphARS extends Graph{
             }
             _file = true;
         } else {
-            String string = energy + ";" + temperature + ";" + energyVariation + ";\n";
+            String string = (double)Math.round(energy * 1000) / 1000 + ";" + (double)Math.round(temperature) + ";" + energyVariation + ";\n";
             String str = string.replaceAll("\\.",",");
             try {
                 Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
