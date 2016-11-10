@@ -5,12 +5,19 @@
  */
 package graphcoloring;
 
-import java.awt.Desktop;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,6 +27,9 @@ public class view extends javax.swing.JFrame {
     
     Graph graph;
     
+    JFXPanel javafxPanel;
+    WebView webComponent;
+    
     /**
      * Creates new form view
      */
@@ -27,6 +37,10 @@ public class view extends javax.swing.JFrame {
         initComponents();
         ImageIcon img = new ImageIcon("logo.png");
         this.setIconImage(img.getImage());
+        javafxPanel = new JFXPanel();
+        jPanel1.setLayout(new BorderLayout());
+        jPanel1.add(javafxPanel, BorderLayout.CENTER);
+        loadJavaFXScene(new File("blank.html"));
     }
 
     /**
@@ -40,7 +54,6 @@ public class view extends javax.swing.JFrame {
 
         jFileChooser = new javax.swing.JFileChooser();
         buttonGroupChooseAlgo = new javax.swing.ButtonGroup();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -52,6 +65,7 @@ public class view extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jRadioButtonARS = new javax.swing.JRadioButton();
         jRadioButtonWelsh = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
@@ -60,9 +74,6 @@ public class view extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Project Graph Coloring v1.0");
@@ -106,6 +117,19 @@ public class view extends javax.swing.JFrame {
         buttonGroupChooseAlgo.add(jRadioButtonWelsh);
         jRadioButtonWelsh.setText("Welsh");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         jMenu1.setText("File");
 
         jCheckBoxMenuItem2.setSelected(true);
@@ -122,6 +146,11 @@ public class view extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Sauvegarder");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Fermer");
@@ -139,31 +168,32 @@ public class view extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
-                                .addGap(101, 101, 101))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jRadioButtonARS)
-                                    .addComponent(jRadioButtonWelsh))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(96, 96, 96))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(101, 101, 101))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonARS)
+                            .addComponent(jRadioButtonWelsh))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(106, 106, 106))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -182,7 +212,9 @@ public class view extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButtonWelsh)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -226,8 +258,9 @@ public class view extends javax.swing.JFrame {
         else 
             htmlFile = new File("index.html");
         try {  
-            Desktop.getDesktop().browse(htmlFile.toURI());
-        } catch (IOException ex) {
+            //Desktop.getDesktop().browse(htmlFile.toURI());
+            loadJavaFXScene(htmlFile);
+        } catch (Exception ex) {
             Logger.getLogger(view.class.getName()).log(Level.SEVERE, null, ex);
         }
         update();
@@ -242,9 +275,26 @@ public class view extends javax.swing.JFrame {
         update();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Object result = JOptionPane.showInputDialog(this, "Entrer le nom du fichier :");
+        graph.sauvegarder(result.toString());
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     private void update(){
         jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
         jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
+                graph.toJSON();
+        File htmlFile;
+        if (jCheckBoxMenuItem2.getState())
+            htmlFile = new File("index-curved.html");
+        else 
+            htmlFile = new File("index.html");
+        try {  
+            //Desktop.getDesktop().browse(htmlFile.toURI());
+            loadJavaFXScene(htmlFile);
+        } catch (Exception ex) {
+            Logger.getLogger(view.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void unlockButtons(){
@@ -286,13 +336,31 @@ public class view extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void loadJavaFXScene(File myFile){
+        System.out.println("file:///"+  myFile.getAbsolutePath());
+        Platform.runLater(new Runnable() {
+        @Override
+        public void run() {
+
+            BorderPane borderPane = new BorderPane();
+            webComponent = new WebView();
+
+            webComponent.getEngine().load("file:///"+  myFile.getAbsolutePath());
+
+            borderPane.setCenter(webComponent);
+            Scene scene = new Scene(borderPane,450,450);
+            javafxPanel.setScene(scene);
+
+      }
+    });
+  }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupChooseAlgo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JFileChooser jFileChooser;
     private javax.swing.JLabel jLabel1;
@@ -305,6 +373,7 @@ public class view extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButtonARS;
     private javax.swing.JRadioButton jRadioButtonWelsh;
     private javax.swing.JScrollPane jScrollPane1;

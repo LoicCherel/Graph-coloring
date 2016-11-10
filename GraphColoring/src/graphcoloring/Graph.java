@@ -21,7 +21,7 @@ import java.nio.file.StandardOpenOption;
 
 /**
  *
- * @authors: Loïc Cherel, Thomas Raynaud, Wilians Rodulfo
+ * @author: Loïc Cherel, Thomas Raynaud, Wilians Rodulfo
  */
 public class Graph implements Serializable {
 
