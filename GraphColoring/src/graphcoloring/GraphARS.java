@@ -32,7 +32,7 @@ public class GraphARS extends Graph{
     //la fonction est appelée plus de 20 fois
     private static int _colorsChanged = 0;
     private static boolean _file = false;
-    private static final int TEMPERATUREMAX = 100;
+    private static final int TEMPERATUREMAX = 1000;
     private static final int X = 15;
 
     public GraphARS() {
@@ -65,6 +65,7 @@ public class GraphARS extends Graph{
     public void applySimulatedAnnealingAlgorithm() {
         //Initialisation de la température et de l'énergie
         this._temperature = TEMPERATUREMAX;
+        boolean temperatureHasChanged = true;
         double energy = this.getEnergy();
         double oldEnergy = energy;
         double energyVariation;
@@ -87,6 +88,7 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
+        storeVariables(energy, this._temperature);
         while (this._temperature > 0) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
@@ -120,15 +122,17 @@ public class GraphARS extends Graph{
                 //System.out.println("The energy has not changed");
                 /*int nbOfTries = 5;
                 while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
-                this._temperature -= 0.1;
+                this._temperature -= 1;
+                temperatureHasChanged = true;
             }
             
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            if(step == stepMax){
-                storeVariables(energy, this._temperature, energyVariation);
+            if(temperatureHasChanged){
+                storeVariables(energy, this._temperature);
                 step = 0;
+                temperatureHasChanged = false;
             }
             //System.out.println(energyVariation); 
             if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
@@ -141,12 +145,10 @@ public class GraphARS extends Graph{
             else{
                 countReachMinColors--;
             }
-            step++;
         }
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.equalsTo(this._graphWithMinNbColors);
         }
-        storeVariables(energy, this._temperature, 0);
     }
 
     /**
@@ -215,7 +217,7 @@ public class GraphARS extends Graph{
         }
     }
     
-    private void storeVariables(double energy, double temperature, double energyVariation) {
+    private void storeVariables(double energy, double temperature) {
         String outputFile = "../energy.csv";
         if (!_file) {
             System.out.println("Creation/Vidage du fichier");
@@ -227,7 +229,7 @@ public class GraphARS extends Graph{
             }
             _file = true;
         } else {
-            String string = (double)Math.round(energy * 1000) / 1000 + ";" + (double)Math.round(temperature) + ";" + energyVariation + ";\n";
+            String string = (double)Math.round(energy * 1000) / 1000 + ";" + (int)(temperature) + ";\n";
             String str = string.replaceAll("\\.",",");
             try {
                 Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
