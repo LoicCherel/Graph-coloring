@@ -9,8 +9,11 @@ import java.io.IOException;
 import static java.lang.Math.exp;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.StandardOpenOption;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -392,5 +395,36 @@ public class GraphARS extends Graph{
     @Override
     public void launchAlgorithm(){
         applySimulatedAnnealingAlgorithm();
+    }
+    
+    public void showVariables(){
+        try {
+            Files.copy(Paths.get("dataP.js"), Paths.get("data.js"),REPLACE_EXISTING);
+            Files.write(Paths.get("data.js"), ("  ],\n  xkey: 'y',\n  ykeys: ['a'],\n  labels: ['Energy']\n});").getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void prepareShowVariables(double temperature , double energy){
+        String outputFile = "dataP.js";
+        double temp = TEMPERATUREMAX - temperature;
+        if (!_file) {
+            System.out.println("Creation/Vidage du fichier");
+            try {
+                Files.deleteIfExists(Paths.get(outputFile));
+                Files.write(Paths.get(outputFile),("Morris.Line({\n  element: 'line-example',\n  data: [ \n    { y: '"+ temp + "', a: " + energy + "}").getBytes(), StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+            _file = true;
+        } else {
+            String string = ",\n    { y: '"+ temp + "', a: " + energy + "}";
+            try {
+                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
     }
 }
