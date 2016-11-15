@@ -70,6 +70,8 @@ public class view extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemTestAlgorithms = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -136,6 +138,15 @@ public class view extends javax.swing.JFrame {
         jCheckBoxMenuItem2.setText("Utiliser un graphe courbé");
         jMenu1.add(jCheckBoxMenuItem2);
         jMenu1.add(jSeparator1);
+
+        jMenuItemTestAlgorithms.setText("Tester les algorithmes");
+        jMenuItemTestAlgorithms.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItemTestAlgorithmsMouseClicked(evt);
+            }
+        });
+        jMenu1.add(jMenuItemTestAlgorithms);
+        jMenu1.add(jSeparator2);
 
         jMenuItem1.setText("Ouvrir");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -280,6 +291,11 @@ public class view extends javax.swing.JFrame {
         graph.sauvegarder(result.toString());
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jMenuItemTestAlgorithmsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemTestAlgorithmsMouseClicked
+        TestAlgorithmsView tav = new TestAlgorithmsView();
+        tav.setVisible(true);
+    }//GEN-LAST:event_jMenuItemTestAlgorithmsMouseClicked
+
     private void update(){
         jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
         jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
@@ -373,11 +389,13 @@ public class view extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemTestAlgorithms;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButtonARS;
     private javax.swing.JRadioButton jRadioButtonWelsh;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
