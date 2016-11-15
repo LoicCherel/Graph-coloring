@@ -64,8 +64,9 @@ public class GraphARS extends Graph{
      * Appliquer l'algorithme du recuit simulé sur le graphe. On itère sur cet
      * algorithme jusqu'à ce que la température du "système" soit égale à zéro.
      * La température diminue si l'énergie du système a diminuée
+     * @param ecriture boolean
      */
-    public void applySimulatedAnnealingAlgorithm() {
+    public void applySimulatedAnnealingAlgorithm(boolean ecriture) {
         //Initialisation de la température et de l'énergie
         this._temperature = TEMPERATUREMAX;
         boolean temperatureHasChanged = true;
@@ -91,7 +92,7 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        storeVariables(energy, this._temperature);
+        if(ecriture) prepareShowVariables(energy, this._temperature);
         while (this._temperature > 0) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
@@ -133,7 +134,7 @@ public class GraphARS extends Graph{
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
             if(temperatureHasChanged){
-                storeVariables(energy, this._temperature);
+                if(ecriture) prepareShowVariables(energy, this._temperature);
                 step = 0;
                 temperatureHasChanged = false;
             }
@@ -149,6 +150,7 @@ public class GraphARS extends Graph{
                 countReachMinColors--;
             }
         }
+        if(ecriture) this.showVariables();
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.equalsTo(this._graphWithMinNbColors);
         }
@@ -378,11 +380,20 @@ public class GraphARS extends Graph{
         return mostUsedColor;
     }
 
+    /**
+     *
+     * @return the value of the energy
+     */
     public double getEnergy() {
         //return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
         return this.getNumberOfColors();
     }
 
+    /**
+     *
+     * @return number of colors in the graph
+     */
+    @Override
     public int getNumberOfColors() {
         return this._nbColors;
     }
@@ -392,11 +403,12 @@ public class GraphARS extends Graph{
     }
 
     /**
+     * @param ecriture
      *
      */
     @Override
-    public void launchAlgorithm(){
-        applySimulatedAnnealingAlgorithm();
+    public void launchAlgorithm(boolean ecriture){
+        applySimulatedAnnealingAlgorithm(ecriture);
     }
     
     public void showVariables(){
@@ -408,9 +420,9 @@ public class GraphARS extends Graph{
         }
     }
     
-    public void prepareShowVariables(double temperature , double energy){
+    public void prepareShowVariables(double energy, double temperature){
         String outputFile = "dataP.js";
-        double temp = TEMPERATUREMAX - temperature;
+        double temp = TEMPERATUREMAX - temperature + 101;
         if (!_file) {
             System.out.println("Creation/Vidage du fichier");
             try {

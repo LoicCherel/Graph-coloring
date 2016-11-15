@@ -30,9 +30,6 @@ public class Graph implements Serializable {
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
-        for (int i = 0; i < 6; i++) {
-            _lVertices.add(new Vertex(i));
-        }
     }
 
     public Graph(int numberOfVertices) {
@@ -208,7 +205,7 @@ public class Graph implements Serializable {
         }
     }
     
-    public void launchAlgorithm(){
+    public void launchAlgorithm(boolean ecriture){
         System.out.println("No algoritm selected");
     }
     

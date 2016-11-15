@@ -11,7 +11,7 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
         GraphARS graph = new GraphARS(100);
-        graph.applySimulatedAnnealingAlgorithm();
+        graph.applySimulatedAnnealingAlgorithm(false);
         System.out.println(graph);
        // System.out.println(graph);
         graph.toJSON();
