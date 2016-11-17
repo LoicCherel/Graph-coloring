@@ -6,7 +6,6 @@
 package graphcoloring;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -260,7 +258,7 @@ public class view extends javax.swing.JFrame {
             unlockButtons();
             update();
         }
-        else{
+        else if (buttonGroupChooseAlgo.isSelected(jRadioButtonWelsh.getModel())){
             System.out.println("Pas d'implementation");
         }
     }//GEN-LAST:event_jButton2ActionPerformed

@@ -32,6 +32,10 @@ public class Graph implements Serializable {
         _lVertices = new ArrayList<Vertex>();
     }
 
+    /**
+     *
+     * @param numberOfVertices 
+     */
     public Graph(int numberOfVertices) {
         Random rn = new Random();
         _lVertices = new ArrayList<Vertex>();
