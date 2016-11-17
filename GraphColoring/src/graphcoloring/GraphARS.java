@@ -11,7 +11,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Random;
+import org.apache.commons.math3.distribution.TDistribution;
+import org.apache.commons.math3.exception.MathIllegalArgumentException;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,7 +81,6 @@ public class GraphARS extends Graph{
         Vertex A;
         int color;
         int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
-        int step = 0, stepMax = 10;
         
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
@@ -135,7 +138,6 @@ public class GraphARS extends Graph{
             //l'efficacité de l'algorithme
             if(temperatureHasChanged){
                 if(ecriture) prepareShowVariables(energy, this._temperature);
-                step = 0;
                 temperatureHasChanged = false;
             }
             //System.out.println(energyVariation); 
@@ -256,11 +258,14 @@ public class GraphARS extends Graph{
         this.equalsTo(this.getBackUp());
     }
     
+    @Override
     public void charger(String nomFic){
         super.charger(nomFic);
+        _colors = Arrays.copyOf(this._colors, this.getNumberOfColors());
         for(Vertex ver : _lVertices){
-            _colors[ver.getColor()]++;
+            this._colors[ver.getColor()]++;
         }
+        this._nbColors = this.getNumberOfColors();
     }
     
     public void displayColors() {
@@ -293,6 +298,61 @@ public class GraphARS extends Graph{
             this._colors[i] = graph._colors[i];
         }
         this._nbColors = graph._nbColors;
+    }
+    
+    public String testAlgorithm(int nbTests, String nameFile){
+        TDistribution student = new TDistribution(nbTests - 1);
+        long[] computingTimes = new long[nbTests];
+        int[] nbColorsObtained = new int[nbTests];
+        long startTime;
+        long endTime;
+        SummaryStatistics statsComputingTimes = new SummaryStatistics();
+        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
+        for(int i = 0; i < nbTests; i++){
+            this.charger(nameFile);
+            startTime = System.currentTimeMillis();
+            this.applySimulatedAnnealingAlgorithm(false);
+            endTime   = System.currentTimeMillis();
+            computingTimes[i] = endTime - startTime; 
+            nbColorsObtained[i] = this.getNumberOfColors();
+        }
+        for (long val : computingTimes) {
+            statsComputingTimes.addValue(val);
+        }
+        for (int val : nbColorsObtained) {
+            statsNbColorsObtained.addValue(val);
+        }
+
+        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
+        System.out.println("TEMPS DE CALCUL");
+        double ci = calcMeanCI(statsComputingTimes, 0.95);
+        System.out.println(String.format("Mean: %f", statsComputingTimes.getMean()));
+        double lower = statsComputingTimes.getMean() - ci;
+        double upper = statsComputingTimes.getMean() + ci;
+        System.out.println(String.format("Confidence Interval 95%%: %f, %f", lower, upper));
+        
+        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
+        System.out.println("NOMBRE DE COULEURS");
+        double ciNbColors = calcMeanCI(statsNbColorsObtained, 0.95);
+        System.out.println(String.format("Mean: %f", statsNbColorsObtained.getMean()));
+        lower = statsNbColorsObtained.getMean() - ciNbColors;
+        upper = statsNbColorsObtained.getMean() + ciNbColors;
+        System.out.println(String.format("Confidence Interval 95%%: %f, %f", lower, upper));
+        
+        return "";
+    }
+
+    private static double calcMeanCI(SummaryStatistics stats, double level) {
+        try {
+            // Create T Distribution with N-1 degrees of freedom
+            TDistribution tDist = new TDistribution(stats.getN() - 1);
+            // Calculate critical value
+            double critVal = tDist.inverseCumulativeProbability(1.0 - (1 - level) / 2);
+            // Calculate confidence interval
+            return critVal * stats.getStandardDeviation() / Math.sqrt(stats.getN());
+        } catch (MathIllegalArgumentException e) {
+            return Double.NaN;
+        }
     }
     
     /**
@@ -389,17 +449,13 @@ public class GraphARS extends Graph{
         return this.getNumberOfColors();
     }
 
-    /**
-     *
-     * @return number of colors in the graph
-     */
+    public GraphARS getBackUp() {
+        return this._backUp;
+    }
+    
     @Override
     public int getNumberOfColors() {
         return this._nbColors;
-    }
-
-    public GraphARS getBackUp() {
-        return this._backUp;
     }
 
     /**

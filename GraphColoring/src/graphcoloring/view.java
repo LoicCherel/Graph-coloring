@@ -150,9 +150,9 @@ public class view extends javax.swing.JFrame {
         jMenu1.add(jSeparator1);
 
         jMenuItemTestAlgorithms.setText("Tester les algorithmes");
-        jMenuItemTestAlgorithms.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItemTestAlgorithmsMouseClicked(evt);
+        jMenuItemTestAlgorithms.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemTestAlgorithmsActionPerformed(evt);
             }
         });
         jMenu1.add(jMenuItemTestAlgorithms);
@@ -264,16 +264,25 @@ public class view extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        int returnVal = jFileChooser.showOpenDialog(this);
-        if (returnVal == jFileChooser.APPROVE_OPTION) {
-            File file = jFileChooser.getSelectedFile();
-            System.out.println(file.getName());
-            graph = new GraphARS();
-            //graph.charger(file.getName());
-            unlockButtons();
-            update();
-        } else {
-            System.out.println("File access cancelled by user.");
+        if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
+            this.graph = new GraphARS();
+            int returnVal = jFileChooser.showOpenDialog(this);
+            if (returnVal == jFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                System.out.println(file.getName());
+                graph = new GraphARS();
+                graph.charger(file.getName());
+                unlockButtons();
+                update();
+            } else {
+                System.out.println("File access cancelled by user.");
+            }
+        }
+        else if(buttonGroupChooseAlgo.isSelected(this.jRadioButtonWelsh.getModel())){
+            JOptionPane.showMessageDialog(null, "Pas d'implémentation pour Welsh & Powell");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Vous devez préciser si le graphe importé est un graphe ARS ou Welsh & Powell");
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -304,14 +313,19 @@ public class view extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        Object result = JOptionPane.showInputDialog(this, "Entrer le nom du fichier :");
-        graph.sauvegarder(result.toString());
+        if(graph == null){
+            JOptionPane.showMessageDialog(null, "Aucun graphe ne peut être enregistré");
+        }
+        else{
+            Object result = JOptionPane.showInputDialog(this, "Entrer le nom du fichier :");
+            graph.sauvegarder(result.toString() + ".ser");
+        }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenuItemTestAlgorithmsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemTestAlgorithmsMouseClicked
+    private void jMenuItemTestAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTestAlgorithmsActionPerformed
         TestAlgorithmsView tav = new TestAlgorithmsView();
         tav.setVisible(true);
-    }//GEN-LAST:event_jMenuItemTestAlgorithmsMouseClicked
+    }//GEN-LAST:event_jMenuItemTestAlgorithmsActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         File htmlFile;
