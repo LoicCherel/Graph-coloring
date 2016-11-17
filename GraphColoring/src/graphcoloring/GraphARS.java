@@ -9,12 +9,15 @@ import java.io.IOException;
 import static java.lang.Math.exp;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Random;
 import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -65,8 +68,9 @@ public class GraphARS extends Graph{
      * Appliquer l'algorithme du recuit simulé sur le graphe. On itère sur cet
      * algorithme jusqu'à ce que la température du "système" soit égale à zéro.
      * La température diminue si l'énergie du système a diminuée
+     * @param ecriture boolean
      */
-    public void applySimulatedAnnealingAlgorithm() {
+    public void applySimulatedAnnealingAlgorithm(boolean ecriture) {
         //Initialisation de la température et de l'énergie
         this._temperature = TEMPERATUREMAX;
         boolean temperatureHasChanged = true;
@@ -77,7 +81,6 @@ public class GraphARS extends Graph{
         Vertex A;
         int color;
         int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
-        int step = 0, stepMax = 10;
         
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
@@ -92,7 +95,7 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        storeVariables(energy, this._temperature);
+        if(ecriture) prepareShowVariables(energy, this._temperature);
         while (this._temperature > 0) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
@@ -134,8 +137,7 @@ public class GraphARS extends Graph{
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
             if(temperatureHasChanged){
-                //storeVariables(energy, this._temperature);
-                step = 0;
+                if(ecriture) prepareShowVariables(energy, this._temperature);
                 temperatureHasChanged = false;
             }
             //System.out.println(energyVariation); 
@@ -150,6 +152,7 @@ public class GraphARS extends Graph{
                 countReachMinColors--;
             }
         }
+        if(ecriture) this.showVariables();
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.equalsTo(this._graphWithMinNbColors);
         }
@@ -308,7 +311,7 @@ public class GraphARS extends Graph{
         for(int i = 0; i < nbTests; i++){
             this.charger(nameFile);
             startTime = System.currentTimeMillis();
-            this.applySimulatedAnnealingAlgorithm();
+            this.applySimulatedAnnealingAlgorithm(false);
             endTime   = System.currentTimeMillis();
             computingTimes[i] = endTime - startTime; 
             nbColorsObtained[i] = this.getNumberOfColors();
@@ -437,6 +440,10 @@ public class GraphARS extends Graph{
         return mostUsedColor;
     }
 
+    /**
+     *
+     * @return the value of the energy
+     */
     public double getEnergy() {
         //return 100.0 * (double) this.getNumberOfColors() + 99.0 * ((double) this.getLeastUsedColor() / (double) this.getMostUsedColor());
         return this.getNumberOfColors();
@@ -452,10 +459,42 @@ public class GraphARS extends Graph{
     }
 
     /**
+     * @param ecriture
      *
      */
     @Override
-    public void launchAlgorithm(){
-        applySimulatedAnnealingAlgorithm();
+    public void launchAlgorithm(boolean ecriture){
+        applySimulatedAnnealingAlgorithm(ecriture);
+    }
+    
+    public void showVariables(){
+        try {
+            Files.copy(Paths.get("dataP.js"), Paths.get("data.js"),REPLACE_EXISTING);
+            Files.write(Paths.get("data.js"), ("  ],\n  xkey: 'y',\n  ykeys: ['a'],\n  labels: ['Energy']\n});").getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void prepareShowVariables(double energy, double temperature){
+        String outputFile = "dataP.js";
+        double temp = TEMPERATUREMAX - temperature + 101;
+        if (!_file) {
+            System.out.println("Creation/Vidage du fichier");
+            try {
+                Files.deleteIfExists(Paths.get(outputFile));
+                Files.write(Paths.get(outputFile),("Morris.Line({\n  element: 'line-example',\n  data: [ \n    { y: '"+ temp + "', a: " + energy + "}").getBytes(), StandardOpenOption.CREATE);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+            _file = true;
+        } else {
+            String string = ",\n    { y: '"+ temp + "', a: " + energy + "}";
+            try {
+                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                //exception handling left as an exercise for the reader
+            }
+        }
     }
 }
