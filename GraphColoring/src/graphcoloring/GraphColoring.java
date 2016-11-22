@@ -11,15 +11,17 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
         long startTime = System.nanoTime();
-        GraphARS graph = new GraphARS(1000);
+        Graph graph = new Graph(5);
+        System.out.println(graph);
+        GraphARS ars =  GraphARS.toGraphARS(graph);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime); 
         System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
-        graph.launchAlgorithm(false);
+        ars.launchAlgorithm(false);
         endTime = System.nanoTime();
         duration = (endTime - startTime); 
         System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
-       // System.out.println(graph);
+        System.out.println(ars);
         graph.toJSON();
     }
 }

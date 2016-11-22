@@ -59,6 +59,10 @@ public class Graph implements Serializable {
         }
     }
 
+    public List<Vertex> getlVertices() {
+        return _lVertices;
+    }
+
     public void addEdge(Vertex a, Vertex b) {
         a.addNeighbour(b);
         b.addNeighbour(a);
@@ -116,9 +120,11 @@ public class Graph implements Serializable {
                 }
             }
         }
-        //else System.out.println("Valeurs nulles");
     }
     
+    /**
+     *
+     */
     public void displayGraph() {
         for (Vertex ver : _lVertices) {
             System.out.println("{id :" + ver.getName() + "},");
@@ -136,8 +142,8 @@ public class Graph implements Serializable {
     @Override
     public String toString() {
         String graph = "";
-        for (int i = 0; i < this._lVertices.size(); i++) {
-            graph += this._lVertices.get(i).toString() + "\n";
+        for (Vertex ver : _lVertices) {
+            graph += ver.toString() + "\n";
         }
         return graph;
     }
@@ -209,8 +215,14 @@ public class Graph implements Serializable {
         }
     }
     
-    public void launchAlgorithm(boolean ecriture){
+    /**
+     *
+     * @param ecriture
+     * @return 
+     */
+    public int launchAlgorithm(boolean ecriture){
         System.out.println("No algoritm selected");
+        return this.getNumberOfColors();
     }
     
     public int getNumberOfColors() {

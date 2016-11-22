@@ -40,9 +40,31 @@ public class WelshPowell extends Graph {
     public WelshPowell() {
         _colors = new int[5];
         _nbColors = 0;
-
+    }
+    
+    public WelshPowell(int numb){
+        super(numb);
+        _colors = new int[numb];
+        _nbColors = 0;
     }
 
+    public static WelshPowell toWelshPowell(Graph g){
+        WelshPowell gra = new WelshPowell(g.getlVertices().size());
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            gra._lVertices.get(i).setColor(g.getlVertices().get(i).getColor());
+            gra._lVertices.get(i).setName(g._lVertices.get(i).getName());
+            gra._lVertices.get(i).getNeighbours().clear();
+        }
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            for (int j = 0; j < g._lVertices.get(i).getNeighbours().size(); j++) {
+                int nameNeighbour = g._lVertices.get(i).getNeighbours().get(j).getName();
+                gra._lVertices.get(i).addNeighbour(gra.findVertex(nameNeighbour));
+            }
+        }
+        gra.colorGraph();
+        return gra;
+    }
+    
     public void colorGraph() {
         int color = 0;
         for (Vertex ver : _lVertices) {
@@ -135,5 +157,10 @@ public class WelshPowell extends Graph {
             return nombreChromatique;
 
         }
+
+    @Override
+    public int launchAlgorithm(boolean ecriture) {
+        return super.launchAlgorithm(ecriture);
+    }
 
     }
