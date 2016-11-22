@@ -27,30 +27,44 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextField1" min="-2" pref="23" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Component id="jLabelNbVariables" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jTextFieldNbVariables" min="-2" pref="50" max="-2" attributes="0"/>
+                      <Component id="jTextFieldNbTests" min="-2" pref="50" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonOpenGraphFile" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jButtonGenerateGraph" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Component id="jTextFieldNbVertices" min="-2" pref="23" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxARSAlgorithm" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="49" max="32767" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -60,23 +74,34 @@
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabelNbVariables" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextFieldNbVariables" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldNbTests" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabelSelectGraph1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonOpenGraphFile" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabelSelectGraph2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonGenerateGraph" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabelSelectGraph3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldNbVertices" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabelSelectGraph4" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jCheckBoxARSAlgorithm" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelAlgorithmChoice" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="131" max="32767" attributes="0"/>
+              <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -92,38 +117,49 @@
         <Property name="text" type="java.lang.String" value="S&#xe9;lectionner un graphe &#xe0; tester :"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="jButtonOpenGraphFile">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ouvrir..."/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOpenGraphFileActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldNbVariables">
+    <Component class="javax.swing.JTextField" name="jTextFieldNbTests">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelSelectGraph2">
       <Properties>
         <Property name="text" type="java.lang.String" value="ou"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="jButtonGenerateGraph">
       <Properties>
         <Property name="text" type="java.lang.String" value="g&#xe9;n&#xe9;rer un graphe"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonGenerateGraphActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelSelectGraph3">
       <Properties>
         <Property name="text" type="java.lang.String" value="avec"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="jTextFieldNbVertices">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelSelectGraph4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sommets"/>
+        <Property name="text" type="java.lang.String" value="sommets"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="jLabelConfidenceInterval1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="jLabelIntervalConfidence1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelConfidenceInterval2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabelIntervalConfidence2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonFindConfidenceInterval">
@@ -133,6 +169,29 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonFindConfidenceIntervalActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBoxARSAlgorithm">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Recuit simul&#xe9;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBoxWPAlgorithm">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Welsh &amp; Powell"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelAlgorithmChoice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="S&#xe9;lectionner le ou les algorithmes &#xe0; tester :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelError">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="ff" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="jLabelError"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

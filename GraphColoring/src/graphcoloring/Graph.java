@@ -18,6 +18,11 @@ import java.util.logging.Logger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import org.apache.commons.math3.distribution.TDistribution;
+import org.apache.commons.math3.exception.MathIllegalArgumentException;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  *
@@ -202,6 +207,62 @@ public class Graph implements Serializable {
             Files.write(Paths.get(outputFile), output.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             System.err.println("ERREUR");
+        }
+    }
+    
+        
+    public String[] testAlgorithm(int nbTests, String nameFile){
+        long[] computingTimes = new long[nbTests];
+        int[] nbColorsObtained = new int[nbTests];
+        long startTime;
+        long endTime;
+        String[] confidenceIntervals = new String[2];
+        SummaryStatistics statsComputingTimes = new SummaryStatistics();
+        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
+        for(int i = 0; i < nbTests; i++){
+            this.charger(nameFile);
+            startTime = System.currentTimeMillis();
+            this.launchAlgorithm(false);
+            endTime = System.currentTimeMillis();
+            computingTimes[i] = endTime - startTime; 
+            nbColorsObtained[i] = this.getNumberOfColors();
+        }
+        for (long val : computingTimes) {
+            statsComputingTimes.addValue(val);
+        }
+        for (int val : nbColorsObtained) {
+            statsNbColorsObtained.addValue(val);
+        }
+
+        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
+        double ci = calcMeanCI(statsComputingTimes, 0.95);
+        BigDecimal lower = new BigDecimal(statsComputingTimes.getMean() - ci);
+        BigDecimal upper = new BigDecimal(statsComputingTimes.getMean() + ci);
+        lower = lower.setScale(3, RoundingMode.HALF_UP);
+        upper = upper.setScale(3, RoundingMode.HALF_UP);
+        confidenceIntervals[0] = "L'intervalle de confiance à 95% du temps de calcul est entre " + lower.toString() + " et " + upper.toString() + " millisecondes";
+        
+        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
+        double ciNbColors = calcMeanCI(statsNbColorsObtained, 0.95);
+        lower = new BigDecimal(statsComputingTimes.getMean() - ci);
+        upper = new BigDecimal(statsComputingTimes.getMean() + ci);
+        lower = lower.setScale(0, RoundingMode.HALF_UP);
+        upper = upper.setScale(0, RoundingMode.HALF_UP);
+        confidenceIntervals[1] = "L'intervalle de confiance à 95% du nombre de couleurs est entre " + lower.toString() + " et " + upper.toString();
+        
+        return confidenceIntervals;
+    }
+
+    private static double calcMeanCI(SummaryStatistics stats, double level) {
+        try {
+            // Create T Distribution with N-1 degrees of freedom
+            TDistribution tDist = new TDistribution(stats.getN() - 1);
+            // Calculate critical value
+            double critVal = tDist.inverseCumulativeProbability(1.0 - (1 - level) / 2);
+            // Calculate confidence interval
+            return critVal * stats.getStandardDeviation() / Math.sqrt(stats.getN());
+        } catch (MathIllegalArgumentException e) {
+            return Double.NaN;
         }
     }
     

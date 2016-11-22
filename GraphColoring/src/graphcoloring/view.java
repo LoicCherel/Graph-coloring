@@ -144,7 +144,7 @@ public class view extends javax.swing.JFrame {
 
         jCheckBox1.setText("Ecriture");
 
-        jMenu1.setText("File");
+        jMenu1.setText("Fichier");
 
         jCheckBoxMenuItem2.setSelected(true);
         jCheckBoxMenuItem2.setText("Utiliser un graphe courbé");

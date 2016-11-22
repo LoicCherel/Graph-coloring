@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
  */
 public class TestAlgorithmsView extends javax.swing.JFrame {
     
-    GraphARS graphARS;
+    Graph graph;
     //WelshPowell graphWelshPowell
 
     /**
@@ -23,6 +23,9 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
         initComponents();
         ImageIcon img = new ImageIcon("logo.png");
         this.setIconImage(img.getImage());
+        this.jLabelError.setText("");
+        this.jLabelConfidenceInterval1.setText("");
+        this.jLabelConfidenceInterval2.setText("");
     }
 
     /**
@@ -36,15 +39,20 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
 
         jLabelNbVariables = new javax.swing.JLabel();
         jLabelSelectGraph1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextFieldNbVariables = new javax.swing.JTextField();
+        jButtonOpenGraphFile = new javax.swing.JButton();
+        jTextFieldNbTests = new javax.swing.JTextField();
         jLabelSelectGraph2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        jButtonGenerateGraph = new javax.swing.JButton();
         jLabelSelectGraph3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldNbVertices = new javax.swing.JTextField();
         jLabelSelectGraph4 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        jLabelConfidenceInterval1 = new javax.swing.JLabel();
+        jLabelConfidenceInterval2 = new javax.swing.JLabel();
         jButtonFindConfidenceInterval = new javax.swing.JButton();
+        jCheckBoxARSAlgorithm = new javax.swing.JCheckBox();
+        jCheckBoxWPAlgorithm = new javax.swing.JCheckBox();
+        jLabelAlgorithmChoice = new javax.swing.JLabel();
+        jLabelError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tester les algorithmes");
@@ -53,17 +61,29 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
 
         jLabelSelectGraph1.setText("Sélectionner un graphe à tester :");
 
-        jButton1.setText("Ouvrir...");
+        jButtonOpenGraphFile.setText("Ouvrir...");
+        jButtonOpenGraphFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOpenGraphFileActionPerformed(evt);
+            }
+        });
 
         jLabelSelectGraph2.setText("ou");
 
-        jButton2.setText("générer un graphe");
+        jButtonGenerateGraph.setText("générer un graphe");
+        jButtonGenerateGraph.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGenerateGraphActionPerformed(evt);
+            }
+        });
 
         jLabelSelectGraph3.setText("avec");
 
-        jLabelSelectGraph4.setText("Sommets");
+        jLabelSelectGraph4.setText("sommets");
 
-        jLabel1.setText("jLabel1");
+        jLabelConfidenceInterval1.setText("jLabelIntervalConfidence1");
+
+        jLabelConfidenceInterval2.setText("jLabelIntervalConfidence2");
 
         jButtonFindConfidenceInterval.setText("Calculer l'intervalle de confiance");
         jButtonFindConfidenceInterval.addActionListener(new java.awt.event.ActionListener() {
@@ -72,6 +92,15 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
             }
         });
 
+        jCheckBoxARSAlgorithm.setText("Recuit simulé");
+
+        jCheckBoxWPAlgorithm.setText("Welsh & Powell");
+
+        jLabelAlgorithmChoice.setText("Sélectionner le ou les algorithmes à tester :");
+
+        jLabelError.setForeground(new java.awt.Color(255, 0, 0));
+        jLabelError.setText("jLabelError");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,27 +108,37 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelConfidenceInterval2)
+                    .addComponent(jLabelConfidenceInterval1)
+                    .addComponent(jLabelError)
+                    .addComponent(jLabelAlgorithmChoice)
                     .addComponent(jButtonFindConfidenceInterval)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelSelectGraph1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelSelectGraph2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabelSelectGraph3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelSelectGraph4))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelNbVariables)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextFieldNbVariables, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                        .addComponent(jTextFieldNbTests, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelSelectGraph1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonOpenGraphFile)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabelSelectGraph2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonGenerateGraph)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelSelectGraph3)
+                                .addGap(12, 12, 12)
+                                .addComponent(jTextFieldNbVertices, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelSelectGraph4))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBoxWPAlgorithm)
+                                    .addComponent(jCheckBoxARSAlgorithm))))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,31 +146,74 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNbVariables)
-                    .addComponent(jTextFieldNbVariables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNbTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelSelectGraph1)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonOpenGraphFile)
                     .addComponent(jLabelSelectGraph2)
-                    .addComponent(jButton2)
+                    .addComponent(jButtonGenerateGraph)
                     .addComponent(jLabelSelectGraph3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldNbVertices, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelSelectGraph4))
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxARSAlgorithm)
+                    .addComponent(jLabelAlgorithmChoice))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxWPAlgorithm)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelError)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonFindConfidenceInterval)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addComponent(jLabelConfidenceInterval1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelConfidenceInterval2)
+                .addGap(61, 61, 61))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonFindConfidenceIntervalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFindConfidenceIntervalActionPerformed
-        this.graphARS = new GraphARS(15);
-        this.graphARS.sauvegarder("testAlgorithms");
-        this.graphARS.testAlgorithm(20, "testAlgorithms");
+        int nbOfTests;
+        this.jLabelError.setText("");
+        if(this.graph != null){
+            this.graph.sauvegarder("testAlgorithms");
+            if(this.jTextFieldNbTests.getText() == ""){
+                this.jLabelError.setText("Erreur :  Le nombre de tests n'est pas indiqué");
+                return;
+            }
+            nbOfTests = Integer.parseInt(this.jTextFieldNbVertices.getText());
+            if(nbOfTests < 5 || nbOfTests > 30){
+                this.jLabelError.setText("Erreur :  Le nombre de tests entré est incorrect");
+                return;
+            }
+            String confidenceIntervals[] = new String[2];
+            confidenceIntervals = this.graph.testAlgorithm(Integer.parseInt(this.jTextFieldNbVertices.getText()), "testAlgorithms");
+            this.jLabelConfidenceInterval1.setText(confidenceIntervals[0]);
+            this.jLabelConfidenceInterval2.setText(confidenceIntervals[1]);
+        }
+        else
+        {
+            this.jLabelError.setText("Erreur : aucun graphe sélectionné");
+        }
     }//GEN-LAST:event_jButtonFindConfidenceIntervalActionPerformed
+
+    private void jButtonOpenGraphFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenGraphFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonOpenGraphFileActionPerformed
+
+    private void jButtonGenerateGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateGraphActionPerformed
+        if(this.jTextFieldNbVertices.getText().equals("")){
+            this.jLabelError.setText("Erreur : veuillez entrer le nombre de sommets du graphe");
+        }
+        else{
+            this.jLabelError.setText("");
+            this.graph = new GraphARS(Integer.parseInt(this.jTextFieldNbVertices.getText()));
+        }
+    }//GEN-LAST:event_jButtonGenerateGraphActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,16 +251,21 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonFindConfidenceInterval;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButtonGenerateGraph;
+    private javax.swing.JButton jButtonOpenGraphFile;
+    private javax.swing.JCheckBox jCheckBoxARSAlgorithm;
+    private javax.swing.JCheckBox jCheckBoxWPAlgorithm;
+    private javax.swing.JLabel jLabelAlgorithmChoice;
+    private javax.swing.JLabel jLabelConfidenceInterval1;
+    private javax.swing.JLabel jLabelConfidenceInterval2;
+    private javax.swing.JLabel jLabelError;
     private javax.swing.JLabel jLabelNbVariables;
     private javax.swing.JLabel jLabelSelectGraph1;
     private javax.swing.JLabel jLabelSelectGraph2;
     private javax.swing.JLabel jLabelSelectGraph3;
     private javax.swing.JLabel jLabelSelectGraph4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextFieldNbVariables;
+    private javax.swing.JTextField jTextFieldNbTests;
+    private javax.swing.JTextField jTextFieldNbVertices;
     // End of variables declaration//GEN-END:variables
 }

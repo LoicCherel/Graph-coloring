@@ -13,9 +13,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Random;
-import org.apache.commons.math3.distribution.TDistribution;
-import org.apache.commons.math3.exception.MathIllegalArgumentException;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -223,28 +220,6 @@ public class GraphARS extends Graph{
             this._nbColors--;
         }
     }
-    
-    private void storeVariables(double energy, double temperature) {
-        String outputFile = "../energy.csv";
-        if (!_file) {
-            System.out.println("Creation/Vidage du fichier");
-            try {
-                Files.deleteIfExists(Paths.get(outputFile));
-                Files.write(Paths.get(outputFile), "".getBytes(), StandardOpenOption.CREATE);
-            } catch (IOException e) {
-                //exception handling left as an exercise for the reader
-            }
-            _file = true;
-        } else {
-            String string = (double)Math.round(energy * 1000) / 1000 + ";" + (int)(temperature) + ";\n";
-            String str = string.replaceAll("\\.",",");
-            try {
-                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                //exception handling left as an exercise for the reader
-            }
-        }
-    }
 
     public void setGraphWithMinNbColors(){
         this._graphWithMinNbColors.equalsTo(this);
@@ -261,11 +236,17 @@ public class GraphARS extends Graph{
     @Override
     public void charger(String nomFic){
         super.charger(nomFic);
-        _colors = Arrays.copyOf(this._colors, this.getNumberOfColors());
+        _colors = Arrays.copyOf(this._colors, this._lVertices.size());
+        this._nbColors = 0;
         for(Vertex ver : _lVertices){
-            this._colors[ver.getColor()]++;
+            this._colors[ver.getColor()] = 1;
         }
-        this._nbColors = this.getNumberOfColors();
+        for(int i = 0; i < this._lVertices.size(); i++){
+            if(this._colors[i] == 1){
+                this._nbColors++;
+            }
+        }
+        
     }
     
     public void displayColors() {
@@ -300,66 +281,10 @@ public class GraphARS extends Graph{
         this._nbColors = graph._nbColors;
     }
     
-    public String testAlgorithm(int nbTests, String nameFile){
-        TDistribution student = new TDistribution(nbTests - 1);
-        long[] computingTimes = new long[nbTests];
-        int[] nbColorsObtained = new int[nbTests];
-        long startTime;
-        long endTime;
-        SummaryStatistics statsComputingTimes = new SummaryStatistics();
-        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
-        for(int i = 0; i < nbTests; i++){
-            this.charger(nameFile);
-            startTime = System.currentTimeMillis();
-            this.applySimulatedAnnealingAlgorithm(false);
-            endTime   = System.currentTimeMillis();
-            computingTimes[i] = endTime - startTime; 
-            nbColorsObtained[i] = this.getNumberOfColors();
-        }
-        for (long val : computingTimes) {
-            statsComputingTimes.addValue(val);
-        }
-        for (int val : nbColorsObtained) {
-            statsNbColorsObtained.addValue(val);
-        }
-
-        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
-        System.out.println("TEMPS DE CALCUL");
-        double ci = calcMeanCI(statsComputingTimes, 0.95);
-        System.out.println(String.format("Mean: %f", statsComputingTimes.getMean()));
-        double lower = statsComputingTimes.getMean() - ci;
-        double upper = statsComputingTimes.getMean() + ci;
-        System.out.println(String.format("Confidence Interval 95%%: %f, %f", lower, upper));
-        
-        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
-        System.out.println("NOMBRE DE COULEURS");
-        double ciNbColors = calcMeanCI(statsNbColorsObtained, 0.95);
-        System.out.println(String.format("Mean: %f", statsNbColorsObtained.getMean()));
-        lower = statsNbColorsObtained.getMean() - ciNbColors;
-        upper = statsNbColorsObtained.getMean() + ciNbColors;
-        System.out.println(String.format("Confidence Interval 95%%: %f, %f", lower, upper));
-        
-        return "";
-    }
-
-    private static double calcMeanCI(SummaryStatistics stats, double level) {
-        try {
-            // Create T Distribution with N-1 degrees of freedom
-            TDistribution tDist = new TDistribution(stats.getN() - 1);
-            // Calculate critical value
-            double critVal = tDist.inverseCumulativeProbability(1.0 - (1 - level) / 2);
-            // Calculate confidence interval
-            return critVal * stats.getStandardDeviation() / Math.sqrt(stats.getN());
-        } catch (MathIllegalArgumentException e) {
-            return Double.NaN;
-        }
-    }
-    
     /**
      *
      */
     private int getRandomColor(String groupOfColorsDescription, Vertex A) {
-
         //On crée tout d'abord un tableau temporaire contenant que les couleurs
         //souhaitées. Cela évite de chercher plusieurs fois une couleur au
         //hasard dans toutes les couleurs jusqu'à ce que l'on tombe sur une
