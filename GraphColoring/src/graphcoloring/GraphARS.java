@@ -51,6 +51,22 @@ public class GraphARS extends Graph{
         this.colorGraph();
     }
 
+    public static GraphARS toGraphARS(Graph g){
+        GraphARS gra = new GraphARS(g.getlVertices().size());
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            gra._lVertices.get(i).setColor(i);
+            gra._lVertices.get(i).setName(g._lVertices.get(i).getName());
+            gra._lVertices.get(i).getNeighbours().clear();
+        }
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            for (int j = 0; j < g._lVertices.get(i).getNeighbours().size(); j++) {
+                int nameNeighbour = g._lVertices.get(i).getNeighbours().get(j).getName();
+                gra._lVertices.get(i).addNeighbour(gra.findVertex(nameNeighbour));
+            }
+        }
+        return gra;
+    }
+    
     public void colorGraph() {
         int color = 0;
         for (Vertex ver : _lVertices) {
@@ -139,7 +155,7 @@ public class GraphARS extends Graph{
             }
             //System.out.println(energyVariation); 
             if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
-                this._graphWithMinNbColors.equalsTo(this);
+                this._graphWithMinNbColors.clone(this);
                 countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
             }
             if(countReachMinColors == 0){
@@ -151,7 +167,7 @@ public class GraphARS extends Graph{
         }
         if(ecriture) this.showVariables();
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
-            this.equalsTo(this._graphWithMinNbColors);
+            this.clone(this._graphWithMinNbColors);
         }
     }
 
@@ -222,15 +238,15 @@ public class GraphARS extends Graph{
     }
 
     public void setGraphWithMinNbColors(){
-        this._graphWithMinNbColors.equalsTo(this);
+        this._graphWithMinNbColors.clone(this);
     }
 
     public void prepareBackUp() {
-        this._backUp.equalsTo(this);
+        this._backUp.clone(this);
     }
 
     public void chargeBackUp() {
-        this.equalsTo(this.getBackUp());
+        this.clone(this.getBackUp());
     }
     
     @Override
@@ -263,7 +279,7 @@ public class GraphARS extends Graph{
         }
     }
     
-    public void equalsTo(GraphARS graph) {
+    public void clone(GraphARS graph) {
         for (int i = 0; i < graph._lVertices.size(); i++) {
             this._lVertices.get(i).setColor(graph._lVertices.get(i).getColor());
             this._lVertices.get(i).setName(graph._lVertices.get(i).getName());
@@ -388,8 +404,9 @@ public class GraphARS extends Graph{
      *
      */
     @Override
-    public void launchAlgorithm(boolean ecriture){
+    public int launchAlgorithm(boolean ecriture){
         applySimulatedAnnealingAlgorithm(ecriture);
+        return this.getNumberOfColors();
     }
     
     public void showVariables(){

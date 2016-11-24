@@ -10,10 +10,18 @@ public class GraphColoring {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        GraphARS graph = new GraphARS(100);
-        graph.applySimulatedAnnealingAlgorithm(false);
+        long startTime = System.nanoTime();
+        Graph graph = new Graph(5);
         System.out.println(graph);
-       // System.out.println(graph);
+        GraphARS ars =  GraphARS.toGraphARS(graph);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime); 
+        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+        ars.launchAlgorithm(false);
+        endTime = System.nanoTime();
+        duration = (endTime - startTime); 
+        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+        System.out.println(ars);
         graph.toJSON();
     }
 }

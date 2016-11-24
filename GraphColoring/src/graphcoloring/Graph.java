@@ -37,6 +37,10 @@ public class Graph implements Serializable {
         _lVertices = new ArrayList<Vertex>();
     }
 
+    /**
+     *
+     * @param numberOfVertices 
+     */
     public Graph(int numberOfVertices) {
         Random rn = new Random();
         _lVertices = new ArrayList<Vertex>();
@@ -58,6 +62,10 @@ public class Graph implements Serializable {
                 }
             }
         }
+    }
+
+    public List<Vertex> getlVertices() {
+        return _lVertices;
     }
 
     public void addEdge(Vertex a, Vertex b) {
@@ -117,9 +125,11 @@ public class Graph implements Serializable {
                 }
             }
         }
-        //else System.out.println("Valeurs nulles");
     }
     
+    /**
+     *
+     */
     public void displayGraph() {
         for (Vertex ver : _lVertices) {
             System.out.println("{id :" + ver.getName() + "},");
@@ -137,8 +147,8 @@ public class Graph implements Serializable {
     @Override
     public String toString() {
         String graph = "";
-        for (int i = 0; i < this._lVertices.size(); i++) {
-            graph += this._lVertices.get(i).toString() + "\n";
+        for (Vertex ver : _lVertices) {
+            graph += ver.toString() + "\n";
         }
         return graph;
     }
@@ -209,7 +219,6 @@ public class Graph implements Serializable {
             System.err.println("ERREUR");
         }
     }
-    
         
     public String[] testAlgorithm(int nbTests, String nameFile){
         long[] computingTimes = new long[nbTests];
@@ -265,9 +274,14 @@ public class Graph implements Serializable {
             return Double.NaN;
         }
     }
-    
-    public void launchAlgorithm(boolean ecriture){
+    /**
+     *
+     * @param ecriture
+     * @return 
+     */
+    public int launchAlgorithm(boolean ecriture){
         System.out.println("No algoritm selected");
+        return this.getNumberOfColors();
     }
     
     public int getNumberOfColors() {

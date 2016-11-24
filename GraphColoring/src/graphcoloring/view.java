@@ -6,7 +6,6 @@
 package graphcoloring;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,6 +27,9 @@ public class view extends javax.swing.JFrame {
     
     JFXPanel javafxPanel;
     WebView webComponent;
+    
+    GraphARS graphARS;
+    WelshPowell welsh;
     
     /**
      * Creates new form view
@@ -204,11 +205,7 @@ public class view extends javax.swing.JFrame {
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButtonARS)
-                            .addComponent(jRadioButtonWelsh))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,7 +214,11 @@ public class view extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox1)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonARS)
+                            .addComponent(jRadioButtonWelsh))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3)
                         .addGap(18, 18, 18)
                         .addComponent(jButton4)
@@ -227,27 +228,27 @@ public class view extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton4)
+                        .addComponent(jButton3)
+                        .addComponent(jCheckBox1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jRadioButtonARS)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButtonWelsh)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4)
-                    .addComponent(jButton3)
-                    .addComponent(jCheckBox1))
                 .addContainerGap())
         );
 
@@ -255,41 +256,28 @@ public class view extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
-            graph = new GraphARS((Integer.parseInt(jTextField1.getText())));
+            graph = new Graph((Integer.parseInt(jTextField1.getText())));
             unlockButtons();
-            update();
-        }
-        else{
-            System.out.println("Pas d'implementation");
-        }
+            graph.toJSON();
+            update(graph);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
-            this.graph = new GraphARS();
-            int returnVal = jFileChooser.showOpenDialog(this);
-            if (returnVal == jFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                System.out.println(file.getName());
-                graph = new GraphARS();
-                graph.charger(file.getName());
-                unlockButtons();
-                update();
-            } else {
-                System.out.println("File access cancelled by user.");
-            }
-        }
-        else if(buttonGroupChooseAlgo.isSelected(this.jRadioButtonWelsh.getModel())){
-            JOptionPane.showMessageDialog(null, "Pas d'implémentation pour Welsh & Powell");
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "Vous devez préciser si le graphe importé est un graphe ARS ou Welsh & Powell");
+        
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == jFileChooser.APPROVE_OPTION) {
+            File file = jFileChooser.getSelectedFile();
+            System.out.println(file.getName());
+            graph = new Graph();
+            graph.charger(file.getName());
+            unlockButtons();
+            update(graph);
+        } else {
+            System.out.println("File access cancelled by user.");
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        graph.toJSON();
         File htmlFile;
         if (jCheckBoxMenuItem2.getState())
             htmlFile = new File("index-curved.html");
@@ -301,17 +289,30 @@ public class view extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(view.class.getName()).log(Level.SEVERE, null, ex);
         }
-        update();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        long startTime = System.nanoTime();
-        graph.launchAlgorithm(jCheckBox1.isSelected());
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime); 
-        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
-        jButton3.setEnabled(true);
-        update();
+        int numb = -1;
+        if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
+            long startTime = System.nanoTime();
+            graphARS = GraphARS.toGraphARS(graph);
+            graphARS.launchAlgorithm(jCheckBox1.isSelected());
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime); 
+            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+            update(graphARS);
+        }else if (buttonGroupChooseAlgo.isSelected(jRadioButtonWelsh.getModel())){
+            long startTime = System.nanoTime();
+            welsh = WelshPowell.toWelshPowell(graph); 
+            welsh.launchAlgorithm(jCheckBox1.isSelected());
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime); 
+            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+            update(welsh);
+        }else{
+            System.out.println("Pas d'algorithme sélectionné");
+        }
+                jButton3.setEnabled(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -330,9 +331,11 @@ public class view extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemTestAlgorithmsActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        File htmlFile;
-        if (graph.getClass() == GraphARS.class){
+        
+        File f = new File("data.js");
+        if(f.exists() && !f.isDirectory()){
             try {
+                File htmlFile;
                 htmlFile = new File("courb.html");
                 loadJavaFXScene(htmlFile);
             } catch (Exception ex) {
@@ -341,11 +344,12 @@ public class view extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void update(){
+    private void update(Graph graph){
         jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
+        
         jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
-                graph.toJSON();
         File htmlFile;
+        graph.toJSON();
         if (jCheckBoxMenuItem2.getState())
             htmlFile = new File("index-curved.html");
         else 
@@ -399,7 +403,6 @@ public class view extends javax.swing.JFrame {
     }
     
     private void loadJavaFXScene(File myFile){
-        System.out.println("file:///"+  myFile.getAbsolutePath());
         Platform.runLater(new Runnable() {
         @Override
         public void run() {
