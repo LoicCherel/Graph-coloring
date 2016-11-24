@@ -27,44 +27,56 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabelNbVariables" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jTextFieldNbTests" min="-2" pref="50" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonOpenGraphFile" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="517" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelMean2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelMean1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jButtonGenerateGraph" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="jTextFieldNbVertices" min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="jLabelNbVariables" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
+                              <Component id="jTextFieldNbTests" min="-2" pref="50" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonOpenGraphFile" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jCheckBoxARSAlgorithm" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                      <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jButtonGenerateGraph" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                      <Component id="jTextFieldNbVertices" min="-2" pref="23" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jCheckBoxARSAlgorithm" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="25" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -93,15 +105,19 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabelMean1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabelMean2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="77" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -191,6 +207,16 @@
           <Color blue="0" green="0" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="jLabelError"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelMean1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabelMean1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelMean2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabelMean2"/>
       </Properties>
     </Component>
   </SubComponents>

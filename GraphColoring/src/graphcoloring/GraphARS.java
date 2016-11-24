@@ -85,7 +85,7 @@ public class GraphARS extends Graph{
      */
     public void applySimulatedAnnealingAlgorithm(boolean ecriture) {
         //Initialisation de la température et de l'énergie
-        this._temperature = TEMPERATUREMAX;
+        this._temperature = TEMPERATUREMAX * this._lVertices.size();
         boolean temperatureHasChanged = true;
         double energy = this.getEnergy();
         double oldEnergy = energy;
@@ -94,6 +94,8 @@ public class GraphARS extends Graph{
         Vertex A;
         int color;
         int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
+        
+        int nbIterations = 0;
         
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
@@ -109,7 +111,7 @@ public class GraphARS extends Graph{
         n'a pas eu ce changement.
          */
         if(ecriture) prepareShowVariables(energy, this._temperature);
-        while (this._temperature > 0) {
+        while (this._temperature > 1) {
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
@@ -142,10 +144,11 @@ public class GraphARS extends Graph{
                 //System.out.println("The energy has not changed");
                 /*int nbOfTries = 5;
                 while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
-                this._temperature -= 1;
-                temperatureHasChanged = true;
+                
             }
-            
+            this._temperature = this._temperature * 0.999;
+            nbIterations++;
+            temperatureHasChanged = true;
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
@@ -211,7 +214,7 @@ public class GraphARS extends Graph{
                     _colorsChanged = 0;
                     return -1;
                 }
-                int color = this.getRandomColor("allColors", A);
+                int color = this.getRandomColor("existingColors", A);
                 //Cas dans lequel il n'y a plus qu'une couleur dans le graphe.
                 //La couleur ne peut alors plus être changée
                 if (color == -1) {
