@@ -41,14 +41,14 @@ public class WelshPowell extends Graph {
         _colors = new int[5];
         _nbColors = 0;
     }
-    
-    public WelshPowell(int numb){
+
+    public WelshPowell(int numb) {
         super(numb);
         _colors = new int[numb];
         _nbColors = 0;
     }
 
-    public static WelshPowell toWelshPowell(Graph g){
+    public static WelshPowell toWelshPowell(Graph g) {
         WelshPowell gra = new WelshPowell(g.getlVertices().size());
         for (int i = 0; i < g._lVertices.size(); i++) {
             gra._lVertices.get(i).setColor(g.getlVertices().get(i).getColor());
@@ -61,10 +61,9 @@ public class WelshPowell extends Graph {
                 gra._lVertices.get(i).addNeighbour(gra.findVertex(nameNeighbour));
             }
         }
-        gra.colorGraph();
         return gra;
     }
-    
+
     public void colorGraph() {
         int color = 0;
         for (Vertex ver : _lVertices) {
@@ -75,6 +74,13 @@ public class WelshPowell extends Graph {
         }
     }
 
+    @Override
+    public int getNumberOfColors() {
+        return _nbColors;
+    }
+
+    
+    
     private boolean isAdjacentsNonColores(Vertex vertex, int color) {
         List<Vertex> adj = vertex.getNeighbours();
         for (Iterator<Vertex> iter = adj.iterator(); iter.hasNext();) {
@@ -144,23 +150,84 @@ public class WelshPowell extends Graph {
                         Vertex autreSommet = (Vertex) s[j];
 
                         if (autreSommet != sommetNonColore
-                                && autreSommet.getColor() == 0)
-                                
-                           /* Probleme de toString àfaire */
-                               // && !sommetNonColore.isNeighbour(autreSommet)
-                              //  && isAdjacentsNonColores(autreSommet, newColor)) {
+                                && autreSommet.getColor() == 0) /* Probleme de toString àfaire */ // && !sommetNonColore.isNeighbour(autreSommet)
+                        //  && isAdjacentsNonColores(autreSommet, newColor)) {
+                        {
                             autreSommet.setColor(newColor);
                         }
                     }
                 }
             }
-            return nombreChromatique;
-
         }
+        return nombreChromatique;
 
+    }
+
+    private void orderLVertices() {
+        List temp = new ArrayList();
+        Vertex max;
+        while ( _lVertices.size() != 0) {
+            max = _lVertices.get(0);
+            for (Vertex ver : _lVertices) {
+                if (max.getDegre() < ver.getDegre() && temp.indexOf(ver) == -1) {
+                    max = ver;
+                }
+            }
+            _lVertices.remove(max);
+            temp.add(max);
+        }
+        _lVertices = temp;
+    }
+
+    private Vertex nextWithOutColor(){
+        for(Vertex ver : _lVertices){
+            if (ver.getColor() == -1 ) return ver;
+        }
+        System.out.println("Return null");
+        return null;
+    }
+    
+    public int algorithmWelshPowel(){
+        orderLVertices();
+        int verticesWithOutColor = _lVertices.size();
+        int numberOfColor = 0;
+        Vertex ver;
+        List<Vertex> actualColor = new ArrayList();
+        while(verticesWithOutColor > 0){
+            if((ver = nextWithOutColor()) != null){
+                System.out.println("Ver Not NULL");
+                ver.setColor(numberOfColor);
+                actualColor.add(ver);
+                verticesWithOutColor--;
+                for(int i = _lVertices.indexOf(ver); i < _lVertices.size(); i++){
+                    if (_lVertices.get(i).getColor() == -1){
+                        boolean b = true;
+                        for(Vertex v : actualColor){
+                            if(_lVertices.get(i).getNeighbours().indexOf(v) != -1) b = false;
+                        }
+                        if(b){
+                            _lVertices.get(i).setColor(numberOfColor);
+                            actualColor.add(_lVertices.get(i));
+                            verticesWithOutColor--;
+                        }                    
+                    }
+                }
+            }
+            else{
+                System.out.println("verticesWithOutColor = " + verticesWithOutColor);
+                break;
+            }
+            actualColor.clear();
+            numberOfColor++;
+        }
+        return numberOfColor;
+    }
+    
+    
     @Override
     public int launchAlgorithm(boolean ecriture) {
-        return super.launchAlgorithm(ecriture);
+        _nbColors = algorithmWelshPowel();
+        return _nbColors;
     }
 
-    }
+}
