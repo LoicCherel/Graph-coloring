@@ -86,6 +86,7 @@ public class GraphARS extends Graph{
     public void applySimulatedAnnealingAlgorithm(boolean ecriture) {
         //Initialisation de la température et de l'énergie
         this._temperature = TEMPERATUREMAX * this._lVertices.size();
+        //this._temperature = 20;
         boolean temperatureHasChanged = true;
         double energy = this.getEnergy();
         double oldEnergy = energy;
@@ -95,13 +96,10 @@ public class GraphARS extends Graph{
         int color;
         int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
         
-        int nbIterations = 0;
-        
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
         this.setGraphWithMinNbColors();
         this.prepareBackUp();
-        //_colorsChanged = 0;
         /*Chaque passage dans cette boucle va faire cette série d'instructions:
         - on prend un sommet et une couleur au hasard
         - on change la couleur du sommet avec la nouvelle couleur choisie
@@ -115,12 +113,13 @@ public class GraphARS extends Graph{
             //for(int k = 0; k < 500; k++){
             Random rn = new Random();
             A = this.getRandomVertex();
-            color = this.getRandomColor("allColors", A);
+            color = this.getRandomColor("existingColors", A);
             if (color == -1) {
                 continue;
             }
             //On fait une copie du graphe avant les changements
             this.prepareBackUp();
+            _colorsChanged = 0;
             this.changeColor(A, color);
             energy = this.getEnergy();
             energyVariation = oldEnergy - energy;
@@ -147,7 +146,7 @@ public class GraphARS extends Graph{
                 
             }
             this._temperature = this._temperature * 0.999;
-            nbIterations++;
+            //this._temperature -= 1;
             temperatureHasChanged = true;
             oldEnergy = energy;
             //On stocke l'énergie et la température du graphe pour évaluer
