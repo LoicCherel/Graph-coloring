@@ -63,7 +63,7 @@ public class view extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jLabel1 = new javax.swing.JLabel();
+        jTextArea1 = new javax.swing.JTextArea();
         jRadioButtonARS = new javax.swing.JRadioButton();
         jRadioButtonWelsh = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
@@ -112,9 +112,10 @@ public class view extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setAutoscrolls(true);
-        jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jScrollPane1.setViewportView(jLabel1);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         buttonGroupChooseAlgo.add(jRadioButtonARS);
         jRadioButtonARS.setText("ARS");
@@ -338,7 +339,7 @@ public class view extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void update(Graph graph){
-        jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
+        jTextArea1.setText(graph.toString());
         
         jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
         File htmlFile;
@@ -422,7 +423,6 @@ public class view extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JFileChooser jFileChooser;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -439,6 +439,7 @@ public class view extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
