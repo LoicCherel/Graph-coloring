@@ -11,7 +11,7 @@ public class GraphColoring {
      */
     public static void main(String[] args) {
         long startTime = System.nanoTime();
-        Graph graph = new Graph(5);
+        Graph graph = new Graph(10000);
         System.out.println(graph);
         GraphARS ars =  GraphARS.toGraphARS(graph);
         long endTime = System.nanoTime();
