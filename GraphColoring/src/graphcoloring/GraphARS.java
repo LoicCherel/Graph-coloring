@@ -22,6 +22,7 @@ public class GraphARS extends Graph{
     //occurence dans la case du tableau à l'indice de la couleur
     private int _nbColors;
     //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
+    private double[] _energy;
     private GraphARS _backUp;
     private GraphARS _graphWithMinNbColors;
     //Copies du graphe
@@ -33,7 +34,6 @@ public class GraphARS extends Graph{
     ////ATTRIBUTS STATIQUES ET COMPTEURS
     private int _nbTimesBeforeUsingMinNumberColorsGraphCounter;
     private int _nbOfNeighboursToChangeCounter;
-    private static boolean _file = false;
 
     public GraphARS() {
         _colors = new int[5];
@@ -51,6 +51,7 @@ public class GraphARS extends Graph{
         GraphARS gra = new GraphARS(g.getlVertices().size());
         for (int i = 0; i < g._lVertices.size(); i++) {
             gra._lVertices.get(i).setColor(i);
+            gra._colors[i] = 1;
             gra._lVertices.get(i).setName(g._lVertices.get(i).getName());
             gra._lVertices.get(i).getNeighbours().clear();
         }
@@ -93,7 +94,7 @@ public class GraphARS extends Graph{
     public void applySimulatedAnnealingAlgorithm(boolean ecriture, int temperatureMax,
             int nbTimesBeforeUsingMinNumberColorsGraph, int nbOfNeighboursToChangeMax) {
         //Initialisation de la température, de l'énergie et des autres paramètres de l'algorithme
-        double temperature = temperatureMax;
+        int temperature = temperatureMax;
         this._nbTimesBeforeUsingMinNumberColorsGraph = nbTimesBeforeUsingMinNumberColorsGraph;
         this._nbOfNeighboursToChangeMax = nbOfNeighboursToChangeMax;
         //Initialisation des compteurs
@@ -107,6 +108,8 @@ public class GraphARS extends Graph{
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
         this.setGraphWithMinNbColors();
         this.prepareBackUp();
+        int step =  temperatureMax / 100;
+        this._energy = new double[101];
         
         /*Chaque passage dans cette boucle va faire cette série d'in100structions:
         - on prend un sommet et une couleur au hasard
@@ -116,11 +119,12 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        if(ecriture) prepareShowVariables(energy, temperature);
+        //if(ecriture) prepareShowVariables(energy, temperature);
+        if(ecriture && (temperature % step == 0)) this._energy[temperature / step] = energy;
         while (temperature > 0) {
             oldEnergy = energy;
             A = this.getRandomVertex();
-            color = this.getRandomColor("existingColors", A);
+            color = this.getRandomColor("allColors", A);
             if (color == -1) { //Cas où il n'existe pas d'autre couleur existante que celle de A
                 return;
             }
@@ -143,7 +147,7 @@ public class GraphARS extends Graph{
             temperature--;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            if(ecriture) prepareShowVariables(energy, temperature);
+            if(ecriture && (temperature % step == 0)) this._energy[temperature / step] = energy;
             /*Si nous obtenons un graphe avec le minimum de couleurs jamais obtenu,
             on le stocke dans this._graphWithMinNbColors.
             Autrement, on va remplacer le graphe par le graphe avec le moins de couleurs
@@ -163,7 +167,7 @@ public class GraphARS extends Graph{
                 }
             }
         }
-        if(ecriture) this.showVariables();
+        if(ecriture) this.showVariables(temperatureMax);
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.clone(this._graphWithMinNbColors);
         }
@@ -219,8 +223,6 @@ public class GraphARS extends Graph{
         int continueColorChanges = this.adaptNeighbours(A);
         if (continueColorChanges == -1) {
  
-            return -1;
-        } else if (continueColorChanges == -2) {
             return -1;
         }
         return 1;
@@ -441,35 +443,27 @@ public class GraphARS extends Graph{
         return this.getNumberOfColors();
     }
     
-    public void showVariables(){
+    public void showVariables(int temperatureMax){
+        String outputFile = "data.js";
+        int temp;
+        String string = "";
+        System.out.println("Creation/Vidage du fichier");
+        temp = 101;
         try {
-            Files.copy(Paths.get("dataP.js"), Paths.get("data.js"),REPLACE_EXISTING);
-            Files.write(Paths.get("data.js"), ("  ],\n  xkey: 'y',\n  ykeys: ['a'],\n  labels: ['Energy']\n});").getBytes(), StandardOpenOption.APPEND);
+            Files.deleteIfExists(Paths.get(outputFile));
         } catch (IOException ex) {
             Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public void prepareShowVariables(double energy, double temperature){
-        String outputFile = "dataP.js";
-        //double temp = TEMPERATUREMAX - temperature + 101;
-        double temp = temperature;
-        if (!_file) {
-            System.out.println("Creation/Vidage du fichier");
-            try {
-                Files.deleteIfExists(Paths.get(outputFile));
-                Files.write(Paths.get(outputFile),("Morris.Line({\n  element: 'line-example',\n  data: [ \n    { y: '"+ temp + "', a: " + energy + "}").getBytes(), StandardOpenOption.CREATE);
-            } catch (IOException e) {
-                //exception handling left as an exercise for the reader
-            }
-            _file = true;
-        } else {
-            String string = ",\n    { y: '"+ temp + "', a: " + energy + "}";
-            try {
-                Files.write(Paths.get(outputFile), string.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                //exception handling left as an exercise for the reader
-            }
+        string += "Morris.Line({\n  element: 'line-example',\n  data: [ \n    { y: '"+ temp + "', a: " + this._energy[this._energy.length - 1] + "}";
+        for(int i = this._energy.length - 1; i >= 0; i--){
+            temp = this._energy.length - i + 101;
+            string += ",\n    { y: '"+ temp + "', a: " + this._energy[i] + "}";
+        }
+        try {
+            string += "  ],\n  xkey: 'y',\n  ykeys: ['a'],\n  labels: ['Energy']\n});";
+            Files.write(Paths.get("data.js"), (string).getBytes(), StandardOpenOption.CREATE);
+        } catch (IOException ex) {
+            Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
