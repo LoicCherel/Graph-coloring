@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package graphcoloring;
 
 import java.io.IOException;
@@ -18,26 +13,27 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Loïc
+ * Classe de graphe compatible avec l'utilisation de l'algorithme du recuit simulé (ARS)
  */
 public class GraphARS extends Graph{
     
-    //Copie du graphe
-    private GraphARS _backUp;
-    private GraphARS _graphWithMinNbColors;
-    private double _temperature;
+    private int[] _colors;
     //Tableau contenant toutes les couleurs du graphe en indice, et leur
     //occurence dans la case du tableau à l'indice de la couleur
-    private int[] _colors;
-    //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
     private int _nbColors;
-
-    //Compteur permettant de donner fin à la récursion de adaptNeighbours() si
-    //la fonction est appelée plus de 20 fois
-    private static int _colorsChanged = 0;
+    //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
+    private GraphARS _backUp;
+    private GraphARS _graphWithMinNbColors;
+    //Copies du graphe
+    
+    ////PARAMETRES DE L'ALGORITHME////
+    private int _nbTimesBeforeUsingMinNumberColorsGraph;
+    private int _nbOfNeighboursToChangeMax;
+    
+    ////ATTRIBUTS STATIQUES ET COMPTEURS
+    private int _nbTimesBeforeUsingMinNumberColorsGraphCounter;
+    private int _nbOfNeighboursToChangeCounter;
     private static boolean _file = false;
-    private static final int TEMPERATUREMAX = 1000;
-    private static final int X = 15;
 
     public GraphARS() {
         _colors = new int[5];
@@ -80,27 +76,39 @@ public class GraphARS extends Graph{
     /**
      * Appliquer l'algorithme du recuit simulé sur le graphe. On itère sur cet
      * algorithme jusqu'à ce que la température du "système" soit égale à zéro.
-     * La température diminue si l'énergie du système a diminuée
      * @param ecriture boolean
+     * @param temperatureMax
+     * Paramètre donnant le nombre d'itérations à effectuer sur l'ARS
+     * @param nbTimesBeforeUsingMinNumberColorsGraph
+     * Paramètre informant du nombre de fois que l'on va essayer de faire des
+     * changements sur le graphe. Si après avoir atteint ce nombre, on n'obtient
+     * pas un graphe avec moins de couleurs que le graphe où on a atteint le
+     * minimum de couleurs, nous allons reprendre comme base de travail ce graphe
+     * sauvegardé (_graphWithMinNbColors)
+     * @param nbOfNeighboursToChangeMax
+     * Paramètre indiquant le nombre de fois que l'on va chercher à modifier
+     * la couleur des voisins d'un sommet pour obtenir un graphe coloré correct
+     * avant d'abandonner le changement
      */
-    public void applySimulatedAnnealingAlgorithm(boolean ecriture) {
-        //Initialisation de la température et de l'énergie
-        this._temperature = TEMPERATUREMAX * this._lVertices.size();
-        //this._temperature = 20;
-        boolean temperatureHasChanged = true;
+    public void applySimulatedAnnealingAlgorithm(boolean ecriture, int temperatureMax,
+            int nbTimesBeforeUsingMinNumberColorsGraph, int nbOfNeighboursToChangeMax) {
+        //Initialisation de la température, de l'énergie et des autres paramètres de l'algorithme
+        double temperature = temperatureMax;
+        this._nbTimesBeforeUsingMinNumberColorsGraph = nbTimesBeforeUsingMinNumberColorsGraph;
+        this._nbOfNeighboursToChangeMax = nbOfNeighboursToChangeMax;
+        //Initialisation des compteurs
+        this._nbTimesBeforeUsingMinNumberColorsGraphCounter = 0;
+        this._nbOfNeighboursToChangeCounter = 0;
         double energy = this.getEnergy();
         double oldEnergy = energy;
-        double energyVariation;
-        double prob;
         Vertex A;
         int color;
-        int countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
-        
         this._backUp = new GraphARS(this._lVertices.size());
         this._graphWithMinNbColors = new GraphARS(this._lVertices.size());
         this.setGraphWithMinNbColors();
         this.prepareBackUp();
-        /*Chaque passage dans cette boucle va faire cette série d'instructions:
+        
+        /*Chaque passage dans cette boucle va faire cette série d'in100structions:
         - on prend un sommet et une couleur au hasard
         - on change la couleur du sommet avec la nouvelle couleur choisie
         - si ce changement a fait varier l'énergie vers le haut, on garde ce
@@ -108,69 +116,86 @@ public class GraphARS extends Graph{
         - sinon, on annule le changement en récupérant une copie du graphe qui
         n'a pas eu ce changement.
          */
-        if(ecriture) prepareShowVariables(energy, this._temperature);
-        while (this._temperature > 1) {
-            //for(int k = 0; k < 500; k++){
-            Random rn = new Random();
+        if(ecriture) prepareShowVariables(energy, temperature);
+        while (temperature > 0) {
+            oldEnergy = energy;
             A = this.getRandomVertex();
             color = this.getRandomColor("existingColors", A);
-            if (color == -1) {
-                continue;
+            if (color == -1) { //Cas où il n'existe pas d'autre couleur existante que celle de A
+                return;
             }
             //On fait une copie du graphe avant les changements
             this.prepareBackUp();
-            _colorsChanged = 0;
-            this.changeColor(A, color);
-            energy = this.getEnergy();
-            energyVariation = oldEnergy - energy;
-            //Si l'énergie a augmenté, on rentre dans cette condition
-            if (energyVariation > 0) {
-                //Calcul de la probabilité de garder le changement
-                prob = exp((-1 * energyVariation) / this._temperature);
-                //System.out.println("Energy: " + energy + ", temperature: "
-                //        + temperature + ", var(Energy):" + energyVariation + ", prob: " + prob);
-                //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
-                if (rn.nextDouble() > prob) {
-                    //Changement annulé. On reprend la copie du graphe
-                    this.chargeBackUp();
-                    //System.out.println("Changes not saved... nbOfColors = " + this.getNumberOfColors());
-                } else {
-                    //System.out.println("Changes SAVED.");
-                }
-            } else if (energyVariation < 0) {
-                //System.out.println("The energy has decreased");
-            } else {
-                //System.out.println("The energy has not changed");
-                /*int nbOfTries = 5;
-                while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
-                
+            //On met le compteur pour le changement des voisins à 0
+            this._nbOfNeighboursToChangeCounter = 0;
+            /*Si le changement de couleur a échoué dû à un trop grand nombre d'appels
+            récursifs à adaptNeighbours, on charge une sauvegarde du graphe avant
+            le changement*/
+            if(this.changeColor(A, color) == -1){
+                this.chargeBackUp();
             }
-            this._temperature = this._temperature * 0.999;
-            //this._temperature -= 1;
-            temperatureHasChanged = true;
-            oldEnergy = energy;
+            energy = this.getEnergy();
+            //En fonction de la variation de l'énergie, nous allons soit garder
+            //ou soit annuler le changement
+            if(this.keepChange(oldEnergy, energy, temperature) == false){
+                this.chargeBackUp();
+            }
+            temperature--;
             //On stocke l'énergie et la température du graphe pour évaluer
             //l'efficacité de l'algorithme
-            if(temperatureHasChanged){
-                if(ecriture) prepareShowVariables(energy, this._temperature);
-                temperatureHasChanged = false;
-            }
-            //System.out.println(energyVariation); 
+            if(ecriture) prepareShowVariables(energy, temperature);
+            /*Si nous obtenons un graphe avec le minimum de couleurs jamais obtenu,
+            on le stocke dans this._graphWithMinNbColors.
+            Autrement, on va remplacer le graphe par le graphe avec le moins de couleurs
+            obtenues en fonction de la valeur du compteur
+            _nbTimesBeforeUsingMinNumberColorsGraphCounter*/
             if (this.getNumberOfColors() < this._graphWithMinNbColors.getNumberOfColors()){
                 this._graphWithMinNbColors.clone(this);
-                countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
-            }
-            if(countReachMinColors == 0){
-                countReachMinColors = this._lVertices.size() * (int)this._temperature * X;
+                this._nbTimesBeforeUsingMinNumberColorsGraphCounter = 0;
             }
             else{
-                countReachMinColors--;
+                if(this._nbTimesBeforeUsingMinNumberColorsGraphCounter == this._nbTimesBeforeUsingMinNumberColorsGraph){
+                    this.clone(this._graphWithMinNbColors);
+                    this._nbTimesBeforeUsingMinNumberColorsGraphCounter = 0;
+                }
+                else{
+                    this._nbTimesBeforeUsingMinNumberColorsGraphCounter++;
+                }
             }
         }
         if(ecriture) this.showVariables();
         if (this.getNumberOfColors() > this._graphWithMinNbColors.getNumberOfColors()){
             this.clone(this._graphWithMinNbColors);
         }
+    }
+    
+    public boolean keepChange(double oldEnergy, double newEnergy, double temperature){
+        Random rn = new Random();
+        double energyVariation = oldEnergy - newEnergy;
+        //Si l'énergie a augmenté, on rentre dans cette condition
+        if (energyVariation > 0) {
+            //Calcul de la probabilité de garder le changement
+            double prob = exp((-1 * energyVariation) / temperature);
+            //System.out.println("Energy: " + energy + ", temperature: "
+            //        + temperature + ", var(Energy):" + energyVariation + ", prob: " + prob);
+            //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
+            if (rn.nextDouble() > prob) {
+                //Changement annulé. On retourne false
+                return false;
+                
+                //System.out.println("Changes not saved... nbOfColors = " + this.getNumberOfColors());
+            } else {
+                //System.out.println("Changes SAVED.");
+            }
+        } else if (energyVariation < 0) {
+            //System.out.println("The energy has decreased");
+        } else {
+            //System.out.println("The energy has not changed");
+            /*int nbOfTries = 5;
+            while((this.changeColor(A, this.getRandomColor("existingColors", A)) == - 1) && (nbOfTries > 0)) nbOfTries--;*/
+
+        }
+        return true;
     }
 
     /**
@@ -182,7 +207,7 @@ public class GraphARS extends Graph{
     public int changeColor(Vertex A, int color) {
         //On efface l'ancienne couleur de A
         this.eraseVertexColor(A);
-        //On lui applique la nouvelle et on incrémente l'occurence de la couleur
+        //On lui applique la nouvelle couleur et on incrémente l'occurence de la couleur
         //dans _colors. Si l'occurence de la nouvelle couleur était nulle, on incrémente
         //aussi le nombre de couleurs existantes
         A.setColor(color);
@@ -193,40 +218,35 @@ public class GraphARS extends Graph{
         //Il faut adapter les voisins du sommet A au changement de couleur.
         int continueColorChanges = this.adaptNeighbours(A);
         if (continueColorChanges == -1) {
-            //System.out.println("Error: the colors cannot be changed anymore");
-            this.chargeBackUp();
+ 
             return -1;
         } else if (continueColorChanges == -2) {
             return -1;
         }
-        //System.out.println(this);
-        //this.displayColors();
         return 1;
     }
 
     public int adaptNeighbours(Vertex A) {
         for (Vertex neighbour : A.getNeighbours()) {
-            //Si A a la même couleur qu'un de ses 
+            //Si A a la même couleur qu'un de ses voisins
             if (A.getColor() == neighbour.getColor()) {
-                _colorsChanged++;
-                if (_colorsChanged >= this._lVertices.size() * 10) {
-                    _colorsChanged = 0;
+                //On arrête l'appel récursif de adaptNeighbours si on l'a appelé
+                //trop de fois
+                this._nbOfNeighboursToChangeCounter++;
+                if (this._nbOfNeighboursToChangeCounter++ >= this._nbOfNeighboursToChangeMax) {
+                    this._nbOfNeighboursToChangeCounter = 0;
                     return -1;
                 }
                 int color = this.getRandomColor("existingColors", A);
-                //Cas dans lequel il n'y a plus qu'une couleur dans le graphe.
-                //La couleur ne peut alors plus être changée
-                if (color == -1) {
-                    this.chargeBackUp();
-                    return -2;
-                }
-                //On arrête de changer de couleurs
+                //On arrête l'appel récursif pour changer de couleur les voisins
+                //si la valeur de retour de changeColor est -1
                 int continueColorChanges = this.changeColor(neighbour, color);
                 if (continueColorChanges == -1) {
-                    return -2;
+                    return -1;
                 }
             }
         }
+        //On arrive ici si tous les voisins ont pu être changés de couleur
         return 1;
     }
     
@@ -407,7 +427,7 @@ public class GraphARS extends Graph{
      */
     @Override
     public int launchAlgorithm(boolean ecriture){
-        applySimulatedAnnealingAlgorithm(ecriture);
+        this.applySimulatedAnnealingAlgorithm(ecriture, 1000 * this._lVertices.size(), 20, 10 * this._lVertices.size());
         return this.getNumberOfColors();
     }
     
@@ -422,7 +442,8 @@ public class GraphARS extends Graph{
     
     public void prepareShowVariables(double energy, double temperature){
         String outputFile = "dataP.js";
-        double temp = TEMPERATUREMAX - temperature + 101;
+        //double temp = TEMPERATUREMAX - temperature + 101;
+        double temp = temperature;
         if (!_file) {
             System.out.println("Creation/Vidage du fichier");
             try {
