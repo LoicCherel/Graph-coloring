@@ -433,6 +433,11 @@ public class GraphARS extends Graph{
         long endTime = System.nanoTime();
         long duration = (endTime - startTime); 
         System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+        if (verifProperties()) {
+            System.out.println("Graphe Correct");
+        } else {
+            System.out.println("Graphe Erroné");
+        }
         return this.getNumberOfColors();
     }
     
