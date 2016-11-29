@@ -226,7 +226,11 @@ public class WelshPowell extends Graph {
     
     @Override
     public int launchAlgorithm(boolean ecriture) {
+        long startTime = System.nanoTime();
         _nbColors = algorithmWelshPowel();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime); 
+        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
         return _nbColors;
     }
 

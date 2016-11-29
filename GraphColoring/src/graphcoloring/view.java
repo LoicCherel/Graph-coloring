@@ -292,27 +292,20 @@ public class view extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int numb = -1;
         if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
-            long startTime = System.nanoTime();
             graphARS = GraphARS.toGraphARS(graph);
             graphARS.launchAlgorithm(jCheckBox1.isSelected());
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime); 
-            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
             update(graphARS);
+            if (jCheckBox1.isSelected())jButton3.setEnabled(true);
         }else if (buttonGroupChooseAlgo.isSelected(jRadioButtonWelsh.getModel())){
-            long startTime = System.nanoTime();
             welsh = WelshPowell.toWelshPowell(graph); 
             welsh.launchAlgorithm(jCheckBox1.isSelected());
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime); 
-            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
             update(welsh);
+            jButton3.setEnabled(false);
         }else{
             System.out.println("Pas d'algorithme sélectionné");
         }
-                jButton3.setEnabled(true);
+                
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
