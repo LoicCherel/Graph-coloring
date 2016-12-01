@@ -7,11 +7,14 @@ package graphcoloring;
 
 import graphcoloring.Graph;
 import graphcoloring.Vertex;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
  *
@@ -62,6 +65,21 @@ public class WelshPowell extends Graph {
             }
         }
         return gra;
+    }
+    
+    public void clone(WelshPowell g) {
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            this._lVertices.get(i).setColor(g.getlVertices().get(i).getColor());
+            this._lVertices.get(i).setName(g._lVertices.get(i).getName());
+            this._lVertices.get(i).getNeighbours().clear();
+        }
+        for (int i = 0; i < g._lVertices.size(); i++) {
+            for (int j = 0; j < g._lVertices.get(i).getNeighbours().size(); j++) {
+                int nameNeighbour = g._lVertices.get(i).getNeighbours().get(j).getName();
+                this._lVertices.get(i).addNeighbour(this.findVertex(nameNeighbour));
+            }
+        }
+        this._nbColors = 0;
     }
 
     public void colorGraph() {
@@ -183,7 +201,7 @@ public class WelshPowell extends Graph {
         for(Vertex ver : _lVertices){
             if (ver.getColor() == -1 ) return ver;
         }
-        System.out.println("Return null");
+        //System.out.println("Return null");
         return null;
     }
     
@@ -195,7 +213,7 @@ public class WelshPowell extends Graph {
         List<Vertex> actualColor = new ArrayList();
         while(verticesWithOutColor > 0){
             if((ver = nextWithOutColor()) != null){
-                System.out.println("Ver Not NULL");
+                //System.out.println("Ver Not NULL");
                 ver.setColor(numberOfColor);
                 actualColor.add(ver);
                 verticesWithOutColor--;
@@ -214,7 +232,7 @@ public class WelshPowell extends Graph {
                 }
             }
             else{
-                System.out.println("verticesWithOutColor = " + verticesWithOutColor);
+                //System.out.println("verticesWithOutColor = " + verticesWithOutColor);
                 break;
             }
             actualColor.clear();
@@ -230,4 +248,53 @@ public class WelshPowell extends Graph {
         return _nbColors;
     }
 
+    public String[] testAlgorithm(int nbTests, Graph graph){
+        long[] computingTimes = new long[nbTests];
+        int[] nbColorsObtained = new int[nbTests];
+        long startTime;
+        long endTime;
+        String[] confidenceIntervals = new String[4];
+        SummaryStatistics statsComputingTimes = new SummaryStatistics();
+        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
+        for(int i = 0; i < nbTests; i++){
+            this.clone(WelshPowell.toWelshPowell(graph));
+            System.out.println(this);
+            startTime = System.currentTimeMillis();
+            nbColorsObtained[i] = this.launchAlgorithm(false);
+            System.out.println(nbColorsObtained[i]);
+                        System.out.println(this);
+            endTime = System.currentTimeMillis();
+            computingTimes[i] = endTime - startTime; 
+        }
+        for (long val : computingTimes) {
+            statsComputingTimes.addValue(val);
+        }
+        for (int val : nbColorsObtained) {
+            statsNbColorsObtained.addValue(val);
+        }
+
+        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
+        double ci = calcMeanCI(statsComputingTimes, 0.95);
+        BigDecimal mean = new BigDecimal(statsComputingTimes.getMean());
+        BigDecimal lower = new BigDecimal(statsComputingTimes.getMean() - ci);
+        BigDecimal upper = new BigDecimal(statsComputingTimes.getMean() + ci);
+        lower = lower.setScale(3, RoundingMode.HALF_UP);
+        upper = upper.setScale(3, RoundingMode.HALF_UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[0] = "L'intervalle de confiance à 95% du temps de calcul est entre " + lower.toString() + " et " + upper.toString() + " millisecondes";
+        confidenceIntervals[1] = "Moyenne du temps de calcul : " + mean;
+        
+        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
+        double ciNbColors = Graph.calcMeanCI(statsNbColorsObtained, 0.95);
+        mean = new BigDecimal(statsNbColorsObtained.getMean());
+        lower = new BigDecimal(statsNbColorsObtained.getMean() - ciNbColors);
+        upper = new BigDecimal(statsNbColorsObtained.getMean() + ciNbColors);
+        lower = lower.setScale(0, RoundingMode.DOWN);
+        upper = upper.setScale(0, RoundingMode.UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[2] = "L'intervalle de confiance à 95% du nombre de couleurs est entre " + lower.toString() + " et " + upper.toString();
+         confidenceIntervals[3] = "Moyenne du nombre de couleurs : " + mean;
+        
+        return confidenceIntervals;
+    }
 }

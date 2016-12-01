@@ -1,7 +1,10 @@
 package graphcoloring;
 
+import static graphcoloring.Graph.calcMeanCI;
 import java.io.IOException;
 import static java.lang.Math.exp;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -10,6 +13,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
  *
@@ -179,7 +183,7 @@ public class GraphARS extends Graph{
         //Si l'énergie a augmenté, on rentre dans cette condition
         if (energyVariation > 0) {
             //Calcul de la probabilité de garder le changement
-            double prob = exp((-1 * energyVariation) / temperature);
+            double prob = exp((-1 * energyVariation) / (temperature * 0.1));
             //System.out.println("Energy: " + energy + ", temperature: "
             //        + temperature + ", var(Energy):" + energyVariation + ", prob: " + prob);
             //System.out.println("The energy has increased: prob = " + prob + ", temperature = " + temperature);
@@ -437,7 +441,6 @@ public class GraphARS extends Graph{
         String outputFile = "data.js";
         int temp;
         String string = "";
-        System.out.println("Creation/Vidage du fichier");
         temp = 101;
         try {
             Files.deleteIfExists(Paths.get(outputFile));
@@ -455,5 +458,53 @@ public class GraphARS extends Graph{
         } catch (IOException ex) {
             Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public String[] testAlgorithm(int nbTests, Graph graph, int[] argumentsARS){
+        long[] computingTimes = new long[nbTests];
+        int[] nbColorsObtained = new int[nbTests];
+        long startTime;
+        long endTime;
+        String[] confidenceIntervals = new String[4];
+        SummaryStatistics statsComputingTimes = new SummaryStatistics();
+        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
+        for(int i = 0; i < nbTests; i++){
+            this.clone(GraphARS.toGraphARS(graph));
+            startTime = System.currentTimeMillis();
+            this.applySimulatedAnnealingAlgorithm(false, argumentsARS[0], argumentsARS[1], argumentsARS[2]);
+            endTime = System.currentTimeMillis();
+            computingTimes[i] = endTime - startTime; 
+            nbColorsObtained[i] = this.getNumberOfColors();
+        }
+        for (long val : computingTimes) {
+            statsComputingTimes.addValue(val);
+        }
+        for (int val : nbColorsObtained) {
+            statsNbColorsObtained.addValue(val);
+        }
+
+        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
+        double ci = calcMeanCI(statsComputingTimes, 0.95);
+        BigDecimal mean = new BigDecimal(statsComputingTimes.getMean());
+        BigDecimal lower = new BigDecimal(statsComputingTimes.getMean() - ci);
+        BigDecimal upper = new BigDecimal(statsComputingTimes.getMean() + ci);
+        lower = lower.setScale(3, RoundingMode.HALF_UP);
+        upper = upper.setScale(3, RoundingMode.HALF_UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[0] = "L'intervalle de confiance à 95% du temps de calcul est entre " + lower.toString() + " et " + upper.toString() + " millisecondes";
+        confidenceIntervals[1] = "Moyenne du temps de calcul : " + mean;
+        
+        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
+        double ciNbColors = Graph.calcMeanCI(statsNbColorsObtained, 0.95);
+        mean = new BigDecimal(statsNbColorsObtained.getMean());
+        lower = new BigDecimal(statsNbColorsObtained.getMean() - ciNbColors);
+        upper = new BigDecimal(statsNbColorsObtained.getMean() + ciNbColors);
+        lower = lower.setScale(0, RoundingMode.DOWN);
+        upper = upper.setScale(0, RoundingMode.UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[2] = "L'intervalle de confiance à 95% du nombre de couleurs est entre " + lower.toString() + " et " + upper.toString();
+         confidenceIntervals[3] = "Moyenne du nombre de couleurs : " + mean;
+        
+        return confidenceIntervals;
     }
 }

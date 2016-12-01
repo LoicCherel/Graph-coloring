@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroupAlgorithm">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="title" type="java.lang.String" value="Tester les algorithmes"/>
@@ -28,55 +32,55 @@
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="517" max="32767" attributes="0"/>
+                      <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonOpenGraphFile" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jButtonGenerateGraph" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="jTextFieldNbVertices" min="-2" pref="45" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabelMean2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelMean1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButtonARS" min="-2" max="-2" attributes="0"/>
+                          <Component id="jRadioButtonWelsh" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="jLabelNbVariables" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jTextFieldNbTests" min="-2" pref="50" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabelSelectGraph1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButtonOpenGraphFile" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Component id="jLabelSelectGraph2" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jButtonGenerateGraph" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jLabelSelectGraph3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Component id="jTextFieldNbVertices" min="-2" pref="23" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabelSelectGraph4" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jCheckBoxARSAlgorithm" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="jLabelTemperatureMax" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelnbTimesBeforeUsingMinNumberColorsGraph" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelnbOfNeighboursToChangeMax" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jTextFieldTemperatureMax" alignment="0" pref="48" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldNbOfNeighboursToChangeMax" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldNbTimesBeforeUsingMinNumberColorsGraph" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="jLabelMean2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelConfidenceInterval1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelMean1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelError" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabelNbVariables" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jTextFieldNbTests" min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="350" pref="297" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -99,13 +103,28 @@
                   <Component id="jLabelSelectGraph4" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jCheckBoxARSAlgorithm" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabelAlgorithmChoice" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabelAlgorithmChoice" min="-2" max="-2" attributes="0"/>
+                  <Component id="jRadioButtonARS" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jCheckBoxWPAlgorithm" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelTemperatureMax" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldTemperatureMax" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelnbTimesBeforeUsingMinNumberColorsGraph" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldNbTimesBeforeUsingMinNumberColorsGraph" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelnbOfNeighboursToChangeMax" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldNbOfNeighboursToChangeMax" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jRadioButtonWelsh" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
               <Component id="jLabelError" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonFindConfidenceInterval" min="-2" max="-2" attributes="0"/>
@@ -117,7 +136,7 @@
               <Component id="jLabelConfidenceInterval2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabelMean2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="77" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -186,16 +205,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonFindConfidenceIntervalActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBoxARSAlgorithm">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Recuit simul&#xe9;"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBoxWPAlgorithm">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Welsh &amp; Powell"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabelAlgorithmChoice">
       <Properties>
         <Property name="text" type="java.lang.String" value="S&#xe9;lectionner le ou les algorithmes &#xe0; tester :"/>
@@ -217,6 +226,52 @@
     <Component class="javax.swing.JLabel" name="jLabelMean2">
       <Properties>
         <Property name="text" type="java.lang.String" value="jLabelMean2"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="jRadioButtonARS">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroupAlgorithm"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Algorithme du recuit simul&#xe9;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="jRadioButtonWelsh">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroupAlgorithm"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Algorithme de Welsh &amp; Powell"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelTemperatureMax">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Temp&#xe9;rature maximum"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelnbTimesBeforeUsingMinNumberColorsGraph">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nombre d&apos;it&#xe9;rations avant d&apos;utiliser le graphe avec le moins de couleurs"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelnbOfNeighboursToChangeMax">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nombre de voisins &#xe0; changer au maximum"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldTemperatureMax">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="1000"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldNbTimesBeforeUsingMinNumberColorsGraph">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="30"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldNbOfNeighboursToChangeMax">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="30"/>
       </Properties>
     </Component>
   </SubComponents>
