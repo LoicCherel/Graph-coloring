@@ -69,7 +69,7 @@ public class WelshPowell extends Graph {
     
     public void clone(WelshPowell g) {
         for (int i = 0; i < g._lVertices.size(); i++) {
-            this._lVertices.get(i).setColor(g.getlVertices().get(i).getColor());
+            this._lVertices.get(i).setColor(-1);
             this._lVertices.get(i).setName(g._lVertices.get(i).getName());
             this._lVertices.get(i).getNeighbours().clear();
         }
