@@ -113,9 +113,37 @@ public class Vertex implements Serializable, Comparator<Vertex> {
 
     @Override
     public String toString() {
-        String vertex = this._name + "," + this._color + ",";
+        String vertex = "";
+        if (_name < 10){
+                vertex += "      " + _name + ",";
+            }else if(_name < 100){
+                vertex += "    " + _name + ",";
+            }else if(_name < 1000){
+                vertex += "  " + _name + ",";
+            }else if(_name < 10000){
+                vertex += _name + ",";
+            }
+        if (_color < 10){
+                vertex += "      " + _color + ",";
+            }else if(_color < 100){
+                vertex += "    " + _color + ",";
+            }else if(_color < 1000){
+                vertex += "  " + _color + ",";
+            }else if(_color < 10000){
+                vertex += _color + ",";
+            }
+        
         for (int i = 0; i < _lNeighbour.size(); i++) {
-            vertex += _lNeighbour.get(i)._name;
+            int name = _lNeighbour.get(i)._name;
+            if (name < 10){
+                vertex += "      " + name;
+            }else if(name < 100){
+                vertex += "    " + name;
+            }else if(name < 1000){
+                vertex += "  " + name;
+            }else if(name < 10000){
+                vertex += name;
+            }
             if (i < _lNeighbour.size() - 1) {
                 vertex += "|";
             }

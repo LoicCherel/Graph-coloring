@@ -213,7 +213,6 @@ public class WelshPowell extends Graph {
         List<Vertex> actualColor = new ArrayList();
         while(verticesWithOutColor > 0){
             if((ver = nextWithOutColor()) != null){
-                //System.out.println("Ver Not NULL");
                 ver.setColor(numberOfColor);
                 actualColor.add(ver);
                 verticesWithOutColor--;
@@ -232,7 +231,6 @@ public class WelshPowell extends Graph {
                 }
             }
             else{
-                //System.out.println("verticesWithOutColor = " + verticesWithOutColor);
                 break;
             }
             actualColor.clear();
@@ -244,7 +242,16 @@ public class WelshPowell extends Graph {
     
     @Override
     public int launchAlgorithm(boolean ecriture) {
+        long startTime = System.nanoTime();
         _nbColors = algorithmWelshPowel();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime); 
+        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+        if (verifProperties()) {
+            System.out.println("Graphe Correct");
+        } else {
+            System.out.println("Graphe Erroné");
+        }
         return _nbColors;
     }
 

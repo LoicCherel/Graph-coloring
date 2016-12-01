@@ -429,11 +429,21 @@ public class GraphARS extends Graph{
 
     /**
      * @param ecriture
+     * @return 
      *
      */
     @Override
     public int launchAlgorithm(boolean ecriture){
+        long startTime = System.nanoTime();
         this.applySimulatedAnnealingAlgorithm(ecriture, 1000 * this._lVertices.size(), 20, 10 * this._lVertices.size());
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime); 
+        System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+        if (verifProperties()) {
+            System.out.println("Graphe Correct");
+        } else {
+            System.out.println("Graphe Erroné");
+        }
         return this.getNumberOfColors();
     }
     

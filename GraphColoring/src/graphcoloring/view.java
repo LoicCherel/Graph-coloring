@@ -39,8 +39,8 @@ public class view extends javax.swing.JFrame {
         ImageIcon img = new ImageIcon("logo.png");
         this.setIconImage(img.getImage());
         javafxPanel = new JFXPanel();
-        jPanel1.setLayout(new BorderLayout());
-        jPanel1.add(javafxPanel, BorderLayout.CENTER);
+        jPanelDisplayGraph.setLayout(new BorderLayout());
+        jPanelDisplayGraph.add(javafxPanel, BorderLayout.CENTER);
         loadJavaFXScene(new File("blank.html"));
     }
 
@@ -55,21 +55,21 @@ public class view extends javax.swing.JFrame {
 
         jFileChooser = new javax.swing.JFileChooser();
         buttonGroupChooseAlgo = new javax.swing.ButtonGroup();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jLabel1 = new javax.swing.JLabel();
+        jTextFieldNumberOfVertices = new javax.swing.JTextField();
+        jLabelNumberOfColors = new javax.swing.JLabel();
+        jLabelNumberOfColorsChangeable = new javax.swing.JLabel();
+        jButtonLaunchAlgorithm = new javax.swing.JButton();
+        jButtonGenerateGraph = new javax.swing.JButton();
+        jLabelEndOfNumbersOfVertices = new javax.swing.JLabel();
+        jButtonDisplayGraph = new javax.swing.JButton();
+        jScrollPane = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jRadioButtonARS = new javax.swing.JRadioButton();
         jRadioButtonWelsh = new javax.swing.JRadioButton();
-        jPanel1 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        jPanelDisplayGraph = new javax.swing.JPanel();
+        jButtonDisplayLineChart = new javax.swing.JButton();
+        jCheckBoxWrite = new javax.swing.JCheckBox();
+        jMenuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -83,38 +83,39 @@ public class view extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Project Graph Coloring v1.1");
 
-        jTextField1.setText("5");
+        jTextFieldNumberOfVertices.setText("5");
 
-        jLabel2.setText("Nombre de couleurs dans le graphe : ");
+        jLabelNumberOfColors.setText("Nombre de couleurs dans le graphe : ");
 
-        jButton1.setText("Lancer l'algorithme");
-        jButton1.setEnabled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLaunchAlgorithm.setText("Lancer l'algorithme");
+        jButtonLaunchAlgorithm.setEnabled(false);
+        jButtonLaunchAlgorithm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonLaunchAlgorithmActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Générer un graphe avec");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGenerateGraph.setText("Générer un graphe avec");
+        jButtonGenerateGraph.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonGenerateGraphActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("sommets.");
+        jLabelEndOfNumbersOfVertices.setText("sommets.");
 
-        jButton4.setText("Afficher le Graphe");
-        jButton4.setEnabled(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDisplayGraph.setText("Afficher le Graphe");
+        jButtonDisplayGraph.setEnabled(false);
+        jButtonDisplayGraph.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButtonDisplayGraphActionPerformed(evt);
             }
         });
 
-        jLabel1.setAutoscrolls(true);
-        jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jScrollPane1.setViewportView(jLabel1);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jScrollPane.setViewportView(jTextArea1);
 
         buttonGroupChooseAlgo.add(jRadioButtonARS);
         jRadioButtonARS.setText("ARS");
@@ -122,28 +123,28 @@ public class view extends javax.swing.JFrame {
         buttonGroupChooseAlgo.add(jRadioButtonWelsh);
         jRadioButtonWelsh.setText("Welsh");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanelDisplayGraph.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanelDisplayGraphLayout = new javax.swing.GroupLayout(jPanelDisplayGraph);
+        jPanelDisplayGraph.setLayout(jPanelDisplayGraphLayout);
+        jPanelDisplayGraphLayout.setHorizontalGroup(
+            jPanelDisplayGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanelDisplayGraphLayout.setVerticalGroup(
+            jPanelDisplayGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jButton3.setText("Afficher l'évolution de l'énergie");
-        jButton3.setEnabled(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDisplayLineChart.setText("Afficher l'évolution de l'énergie");
+        jButtonDisplayLineChart.setEnabled(false);
+        jButtonDisplayLineChart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonDisplayLineChartActionPerformed(evt);
             }
         });
 
-        jCheckBox1.setText("Ecriture");
+        jCheckBoxWrite.setText("Ecriture");
 
         jMenu1.setText("Fichier");
 
@@ -180,48 +181,48 @@ public class view extends javax.swing.JFrame {
         jMenuItem3.setText("Fermer");
         jMenu1.add(jMenuItem3);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar.add(jMenu1);
 
         jMenu2.setText("?");
-        jMenuBar1.add(jMenu2);
+        jMenuBar.add(jMenu2);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelDisplayGraph, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(jButtonGenerateGraph)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldNumberOfVertices, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
+                        .addComponent(jLabelEndOfNumbersOfVertices)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
+                        .addComponent(jLabelNumberOfColors)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelNumberOfColorsChangeable, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(106, 106, 106))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(jButtonLaunchAlgorithm)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1)
+                        .addComponent(jCheckBoxWrite)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jRadioButtonARS)
                             .addComponent(jRadioButtonWelsh))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(jButtonDisplayLineChart)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4)
+                        .addComponent(jButtonDisplayGraph)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -229,22 +230,22 @@ public class view extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
+                    .addComponent(jLabelNumberOfColorsChangeable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelNumberOfColors, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonGenerateGraph, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(jLabelEndOfNumbersOfVertices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldNumberOfVertices))
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                    .addComponent(jPanelDisplayGraph, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jButton4)
-                        .addComponent(jButton3)
-                        .addComponent(jCheckBox1))
+                        .addComponent(jButtonLaunchAlgorithm)
+                        .addComponent(jButtonDisplayGraph)
+                        .addComponent(jButtonDisplayLineChart)
+                        .addComponent(jCheckBoxWrite))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jRadioButtonARS)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -255,12 +256,12 @@ public class view extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-            graph = new Graph((Integer.parseInt(jTextField1.getText())));
+    private void jButtonGenerateGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateGraphActionPerformed
+            graph = new Graph((Integer.parseInt(jTextFieldNumberOfVertices.getText())));
             unlockButtons();
             graph.toJSON();
             update(graph);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonGenerateGraphActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         
@@ -277,7 +278,7 @@ public class view extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButtonDisplayGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayGraphActionPerformed
         File htmlFile;
         if (jCheckBoxMenuItem2.getState())
             htmlFile = new File("index-curved.html");
@@ -289,31 +290,24 @@ public class view extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(view.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jButtonDisplayGraphActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int numb = -1;
+    private void jButtonLaunchAlgorithmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLaunchAlgorithmActionPerformed
         if(buttonGroupChooseAlgo.isSelected(jRadioButtonARS.getModel())){
-            long startTime = System.nanoTime();
             graphARS = GraphARS.toGraphARS(graph);
-            graphARS.launchAlgorithm(jCheckBox1.isSelected());
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime); 
-            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+            graphARS.launchAlgorithm(jCheckBoxWrite.isSelected());
             update(graphARS);
+            if (jCheckBoxWrite.isSelected())jButtonDisplayLineChart.setEnabled(true);
         }else if (buttonGroupChooseAlgo.isSelected(jRadioButtonWelsh.getModel())){
-            long startTime = System.nanoTime();
             welsh = WelshPowell.toWelshPowell(graph); 
-            welsh.launchAlgorithm(jCheckBox1.isSelected());
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime); 
-            System.out.println("Execution Time : " + (duration/1000000) + " milliseconds");
+            welsh.launchAlgorithm(jCheckBoxWrite.isSelected());
             update(welsh);
+            jButtonDisplayLineChart.setEnabled(false);
         }else{
             System.out.println("Pas d'algorithme sélectionné");
         }
-                jButton3.setEnabled(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+                
+    }//GEN-LAST:event_jButtonLaunchAlgorithmActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         if(graph == null){
@@ -330,7 +324,7 @@ public class view extends javax.swing.JFrame {
         tav.setVisible(true);
     }//GEN-LAST:event_jMenuItemTestAlgorithmsActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonDisplayLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayLineChartActionPerformed
         
         File f = new File("data.js");
         if(f.exists() && !f.isDirectory()){
@@ -342,12 +336,12 @@ public class view extends javax.swing.JFrame {
                 Logger.getLogger(view.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonDisplayLineChartActionPerformed
 
     private void update(Graph graph){
-        jLabel1.setText("<html>" + graph.toString().replaceAll("\n", "<BR>") + "</html>");
+        jTextArea1.setText(graph.toString());
         
-        jLabel3.setText(Integer.toString(graph.getNumberOfColors()));
+        jLabelNumberOfColorsChangeable.setText(Integer.toString(graph.getNumberOfColors()));
         File htmlFile;
         graph.toJSON();
         if (jCheckBoxMenuItem2.getState())
@@ -363,8 +357,8 @@ public class view extends javax.swing.JFrame {
     }
     
     private void unlockButtons(){
-        jButton1.setEnabled(true);
-        jButton4.setEnabled(true);
+        jButtonLaunchAlgorithm.setEnabled(true);
+        jButtonDisplayGraph.setEnabled(true);
     }
     
     /**
@@ -422,30 +416,30 @@ public class view extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupChooseAlgo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JButton jButtonDisplayGraph;
+    private javax.swing.JButton jButtonDisplayLineChart;
+    private javax.swing.JButton jButtonGenerateGraph;
+    private javax.swing.JButton jButtonLaunchAlgorithm;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
+    private javax.swing.JCheckBox jCheckBoxWrite;
     private javax.swing.JFileChooser jFileChooser;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabelEndOfNumbersOfVertices;
+    private javax.swing.JLabel jLabelNumberOfColors;
+    private javax.swing.JLabel jLabelNumberOfColorsChangeable;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItemTestAlgorithms;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelDisplayGraph;
     private javax.swing.JRadioButton jRadioButtonARS;
     private javax.swing.JRadioButton jRadioButtonWelsh;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextFieldNumberOfVertices;
     // End of variables declaration//GEN-END:variables
 }

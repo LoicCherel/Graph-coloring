@@ -243,4 +243,16 @@ public class Graph implements Serializable {
     public int getNumberOfColors() {
         return _lVertices.size();
     }
+    
+    public boolean verifProperties(){
+        for (Vertex ver : _lVertices){
+            int color = ver.getColor();
+            for (Vertex v : ver.getNeighbours()){
+                if (color == v.getColor()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
