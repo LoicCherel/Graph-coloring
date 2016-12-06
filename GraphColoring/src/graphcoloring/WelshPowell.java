@@ -5,14 +5,10 @@
  */
 package graphcoloring;
 
-import graphcoloring.Graph;
-import graphcoloring.Vertex;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
@@ -26,28 +22,15 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
  */
 public class WelshPowell extends Graph {
 
-    /**
-     * Les sommets du graphe
-     */
-    private List<Vertex> vertexs = new ArrayList<Vertex>();
-    private List<String> messages = new ArrayList<String>();
-
-    private static int _labelGen = 1;
-
-    private int[] _colors;
-
     private int _nbColors;
-    Vertex A;
 
     //Construteur
     public WelshPowell() {
-        _colors = new int[5];
         _nbColors = 0;
     }
 
     public WelshPowell(int numb) {
         super(numb);
-        _colors = new int[numb];
         _nbColors = 0;
     }
 
@@ -69,7 +52,7 @@ public class WelshPowell extends Graph {
     
     public void clone(WelshPowell g) {
         for (int i = 0; i < g._lVertices.size(); i++) {
-            this._lVertices.get(i).setColor(g.getlVertices().get(i).getColor());
+            this._lVertices.get(i).setColor(-1);
             this._lVertices.get(i).setName(g._lVertices.get(i).getName());
             this._lVertices.get(i).getNeighbours().clear();
         }
@@ -82,103 +65,9 @@ public class WelshPowell extends Graph {
         this._nbColors = 0;
     }
 
-    public void colorGraph() {
-        int color = 0;
-        for (Vertex ver : _lVertices) {
-            ver.setColor(color);
-            this._colors[color] = 1;
-            color++;
-            this._nbColors++;
-        }
-    }
-
     @Override
     public int getNumberOfColors() {
         return _nbColors;
-    }
-
-    
-    
-    private boolean isAdjacentsNonColores(Vertex vertex, int color) {
-        List<Vertex> adj = vertex.getNeighbours();
-        for (Iterator<Vertex> iter = adj.iterator(); iter.hasNext();) {
-            return iter.next().getColor() != color;
-        }
-        return false;
-    }
-
-    public int getNombreChromatique(Vertex A) {
-        int nombreChromatique = 0;
-
-        Object[] s = vertexs.toArray();
-        /**
-         * Tri décroissant des sommets en fonction de leur degré
-         */
-        for (Vertex NeibourWP : A.getNeighbours()) {
-
-            for (int i = 0; i < s.length - 1; i++) {
-                for (int j = i + 1; j < s.length; j++) {
-                    Vertex si = (Vertex) s[i];
-                    Vertex sj = (Vertex) s[j];
-                    if (sj.getDegre() > si.getDegre()) {
-                        Object temp = s[i];
-                        s[i] = s[j];
-                        s[j] = temp;
-                    }
-                }
-            }
-            messages.clear();
-            for (int i = 0; i < s.length; i++) {
-//		Vertex vertex = (Vertex) s[i]; + vertex.getDegre());
-//			vertex.setColor(0); /* Initialiser : aucune couleur a tous les */
-//			vertex.setRang(i);
-            }
-
-            Vertex sommetNonColore = null;
-            int i = 0;
-            boolean boucler = true;
-            while (i < s.length && boucler) {
-                /**
-                 * recherche d'un sommet non coloré
-                 */
-                do {
-                    sommetNonColore = (Vertex) s[i++];
-                } while (i < s.length && sommetNonColore.getColor() != 0);
-
-                /**
-                 * attribuant une couleur non encore utilisée, au premier sommet
-                 * non encore coloré
-                 */
-                int newColor = 0;
-                if (sommetNonColore != null) {
-                    if (sommetNonColore.getColor() == 0) {
-                        newColor = ++nombreChromatique;
-                        sommetNonColore.setColor(newColor);
-                    } else {
-                        boucler = false;
-                    }
-                }
-
-                /**
-                 * Attribuer cette même couleur à chaque sommet non encore
-                 * coloré et non adjacent à un sommet de cette couleur
-                 */
-                if (i < s.length && boucler) {
-                    for (int j = 0; j < s.length; j++) {
-                        Vertex autreSommet = (Vertex) s[j];
-
-                        if (autreSommet != sommetNonColore
-                                && autreSommet.getColor() == 0) /* Probleme de toString àfaire */ // && !sommetNonColore.isNeighbour(autreSommet)
-                        //  && isAdjacentsNonColores(autreSommet, newColor)) {
-                        {
-                            autreSommet.setColor(newColor);
-                        }
-                    }
-                }
-            }
-        }
-        return nombreChromatique;
-
     }
 
     private void orderLVertices() {

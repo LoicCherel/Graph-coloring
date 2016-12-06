@@ -97,6 +97,7 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
         jLabelConfidenceInterval2.setText("jLabelIntervalConfidence2");
 
         jButtonFindConfidenceInterval.setText("Calculer l'intervalle de confiance");
+        jButtonFindConfidenceInterval.setEnabled(false);
         jButtonFindConfidenceInterval.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFindConfidenceIntervalActionPerformed(evt);
@@ -288,8 +289,9 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
         }
         else{
             this.jLabelError.setText("");
-            this.graph = new GraphARS(Integer.parseInt(this.jTextFieldNbVertices.getText()));
+            this.graph = new Graph(Integer.parseInt(this.jTextFieldNbVertices.getText()));
             this.graph.sauvegarder("testAlgorithms");
+            this.jButtonFindConfidenceInterval.setEnabled(true);
         }
     }//GEN-LAST:event_jButtonGenerateGraphActionPerformed
 
