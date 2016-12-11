@@ -64,47 +64,5 @@ public class GraphColoring {
             }
         }
         Files.write(Paths.get(outputFile_I), (string).getBytes(), StandardOpenOption.CREATE);
-           /*System.out.println("NBsommets = " + S + ", I = " + I +
-                                    ", C = " + C + ", Temperature = " + T + ", NBCOULEURS = " + mean.toString());*/
-        //POUR T
-        /*String outputFile_T = "dataARS_T.csv";
-        string = "";
-        for(int S = 10; S < 50; S += 5){
-            System.out.println(S);
-            Graph graph = new Graph(S);
-            for(int T = 2000; T < 10000; T += 400){
-                System.out.println("  " + T);
-                double[] tab_C = new double[10];
-                int compteur_C = 0;
-                for(int C = 50; C > 3; C -= 5){
-                    double[] tab_I = new double[6];
-                    int compteur_I = 0;
-                    for(int I = 30; I > 3; I -= 5){
-                        graphARS = GraphARS.toGraphARS(graph);
-                        graphARS.applySimulatedAnnealingAlgorithm(false, T, I, C);
-                        tab_I[compteur_I] = graphARS.getNumberOfColors();
-                        compteur_I++;
-                    }
-                    SummaryStatistics statsT = new SummaryStatistics();
-                    for (double val : tab_I) {
-                        statsT.addValue(val);
-                    }
-                    BigDecimal meanT = new BigDecimal(statsT.getMean());
-                    meanT = meanT.setScale(3, RoundingMode.HALF_UP);
-                    tab_C[compteur_C] = meanT.doubleValue();
-                    compteur_C++;
-                }
-                SummaryStatistics statsI = new SummaryStatistics();
-                for (double val : tab_C) {
-                    statsI.addValue(val);
-                }
-                BigDecimal meanC = new BigDecimal(statsI.getMean());
-                meanC = meanC.setScale(3, RoundingMode.HALF_UP);
-                string += S + "; " + T + "; " + meanC + ";\n";
-            }
-        }
-        Files.write(Paths.get(outputFile_T), (string).getBytes(), StandardOpenOption.CREATE);*/
-           /*System.out.println("NBsommets = " + S + ", I = " + I +
-                                    ", C = " + C + ", Temperature = " + T + ", NBCOULEURS = " + mean.toString());*/
     }
 }

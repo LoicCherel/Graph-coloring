@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +32,8 @@ public class Graph implements Serializable {
 
     //Liste des sommets du graphe
     List<Vertex> _lVertices;
+    int _nbColors;
+    //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
 
     public Graph() {
         _lVertices = new ArrayList<Vertex>();
@@ -254,5 +258,65 @@ public class Graph implements Serializable {
             }
         }
         return true;
+    }
+    
+    public String[] testAlgorithm(int nbTests, Graph graph, int[] argumentsARS){
+        long[] computingTimes = new long[nbTests];
+        int[] nbColorsObtained = new int[nbTests];
+        long startTime;
+        long endTime;
+        GraphARS ars;
+        WelshPowell welshPowell;
+        String[] confidenceIntervals = new String[4];
+        SummaryStatistics statsComputingTimes = new SummaryStatistics();
+        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
+        for(int i = 0; i < nbTests; i++){
+            if(argumentsARS != null){
+                ars = GraphARS.toGraphARS(graph);
+                startTime = System.currentTimeMillis();
+                ars.applySimulatedAnnealingAlgorithm(false, argumentsARS[0], argumentsARS[1], argumentsARS[2]);
+                endTime = System.currentTimeMillis();
+                computingTimes[i] = endTime - startTime;
+                nbColorsObtained[i] = ars.getNumberOfColors();
+            }
+            else{
+                welshPowell = WelshPowell.toWelshPowell(graph);
+                startTime = System.currentTimeMillis();
+                welshPowell.launchAlgorithm(false);
+                endTime = System.currentTimeMillis();
+                computingTimes[i] = endTime - startTime;
+                nbColorsObtained[i] = welshPowell.getNumberOfColors();
+            }
+        }
+        for (long val : computingTimes) {
+            statsComputingTimes.addValue(val);
+        }
+        for (int val : nbColorsObtained) {
+            statsNbColorsObtained.addValue(val);
+        }
+
+        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
+        double ci = calcMeanCI(statsComputingTimes, 0.95);
+        BigDecimal mean = new BigDecimal(statsComputingTimes.getMean());
+        BigDecimal lower = new BigDecimal(statsComputingTimes.getMean() - ci);
+        BigDecimal upper = new BigDecimal(statsComputingTimes.getMean() + ci);
+        lower = lower.setScale(3, RoundingMode.HALF_UP);
+        upper = upper.setScale(3, RoundingMode.HALF_UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[0] = "L'intervalle de confiance à 95% du temps de calcul est entre " + lower.toString() + " et " + upper.toString() + " millisecondes";
+        confidenceIntervals[1] = "Moyenne du temps de calcul : " + mean;
+        
+        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
+        double ciNbColors = Graph.calcMeanCI(statsNbColorsObtained, 0.95);
+        mean = new BigDecimal(statsNbColorsObtained.getMean());
+        lower = new BigDecimal(statsNbColorsObtained.getMean() - ciNbColors);
+        upper = new BigDecimal(statsNbColorsObtained.getMean() + ciNbColors);
+        lower = lower.setScale(0, RoundingMode.DOWN);
+        upper = upper.setScale(0, RoundingMode.UP);
+        mean = mean.setScale(2, RoundingMode.HALF_UP);
+        confidenceIntervals[2] = "L'intervalle de confiance à 95% du nombre de couleurs est entre " + lower.toString() + " et " + upper.toString();
+         confidenceIntervals[3] = "Moyenne du nombre de couleurs : " + mean;
+        
+        return confidenceIntervals;
     }
 }

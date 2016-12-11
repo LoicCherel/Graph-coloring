@@ -263,7 +263,7 @@ public class TestAlgorithmsView extends javax.swing.JFrame {
                 confidenceIntervals = graphARS.testAlgorithm(Integer.parseInt(this.jTextFieldNbVertices.getText()), graph, argumentsARS);
             }else if (buttonGroupAlgorithm.isSelected(jRadioButtonWelsh.getModel())){
                 welsh = WelshPowell.toWelshPowell(graph);
-                confidenceIntervals = welsh.testAlgorithm(Integer.parseInt(this.jTextFieldNbVertices.getText()), graph);
+                confidenceIntervals = graph.testAlgorithm(Integer.parseInt(this.jTextFieldNbVertices.getText()), graph, null);
                 //welsh.launchAlgorithm(false);
             }else{
                 this.jLabelError.setText("Erreur : Pas d'algorithme sélectionné");

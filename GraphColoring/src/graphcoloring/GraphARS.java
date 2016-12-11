@@ -1,19 +1,14 @@
 package graphcoloring;
 
-import static graphcoloring.Graph.calcMeanCI;
 import java.io.IOException;
 import static java.lang.Math.exp;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
  *
@@ -24,8 +19,6 @@ public class GraphARS extends Graph{
     private int[] _colors;
     //Tableau contenant toutes les couleurs du graphe en indice, et leur
     //occurence dans la case du tableau à l'indice de la couleur
-    private int _nbColors;
-    //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
     private double[] _energy;
     private GraphARS _backUp;
     private GraphARS _graphWithMinNbColors;
@@ -468,53 +461,5 @@ public class GraphARS extends Graph{
         } catch (IOException ex) {
             Logger.getLogger(GraphARS.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public String[] testAlgorithm(int nbTests, Graph graph, int[] argumentsARS){
-        long[] computingTimes = new long[nbTests];
-        int[] nbColorsObtained = new int[nbTests];
-        long startTime;
-        long endTime;
-        String[] confidenceIntervals = new String[4];
-        SummaryStatistics statsComputingTimes = new SummaryStatistics();
-        SummaryStatistics statsNbColorsObtained = new SummaryStatistics();
-        for(int i = 0; i < nbTests; i++){
-            this.clone(GraphARS.toGraphARS(graph));
-            startTime = System.currentTimeMillis();
-            this.applySimulatedAnnealingAlgorithm(false, argumentsARS[0], argumentsARS[1], argumentsARS[2]);
-            endTime = System.currentTimeMillis();
-            computingTimes[i] = endTime - startTime; 
-            nbColorsObtained[i] = this.getNumberOfColors();
-        }
-        for (long val : computingTimes) {
-            statsComputingTimes.addValue(val);
-        }
-        for (int val : nbColorsObtained) {
-            statsNbColorsObtained.addValue(val);
-        }
-
-        // Calculer l'intervalle de confiance à 95% pour le temps de calcul
-        double ci = calcMeanCI(statsComputingTimes, 0.95);
-        BigDecimal mean = new BigDecimal(statsComputingTimes.getMean());
-        BigDecimal lower = new BigDecimal(statsComputingTimes.getMean() - ci);
-        BigDecimal upper = new BigDecimal(statsComputingTimes.getMean() + ci);
-        lower = lower.setScale(3, RoundingMode.HALF_UP);
-        upper = upper.setScale(3, RoundingMode.HALF_UP);
-        mean = mean.setScale(2, RoundingMode.HALF_UP);
-        confidenceIntervals[0] = "L'intervalle de confiance à 95% du temps de calcul est entre " + lower.toString() + " et " + upper.toString() + " millisecondes";
-        confidenceIntervals[1] = "Moyenne du temps de calcul : " + mean;
-        
-        // Calculer l'intervalle de confiance à 95% pour le nombre de couleus
-        double ciNbColors = Graph.calcMeanCI(statsNbColorsObtained, 0.95);
-        mean = new BigDecimal(statsNbColorsObtained.getMean());
-        lower = new BigDecimal(statsNbColorsObtained.getMean() - ciNbColors);
-        upper = new BigDecimal(statsNbColorsObtained.getMean() + ciNbColors);
-        lower = lower.setScale(0, RoundingMode.DOWN);
-        upper = upper.setScale(0, RoundingMode.UP);
-        mean = mean.setScale(2, RoundingMode.HALF_UP);
-        confidenceIntervals[2] = "L'intervalle de confiance à 95% du nombre de couleurs est entre " + lower.toString() + " et " + upper.toString();
-         confidenceIntervals[3] = "Moyenne du nombre de couleurs : " + mean;
-        
-        return confidenceIntervals;
     }
 }
