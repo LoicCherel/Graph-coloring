@@ -6,46 +6,60 @@ import java.util.List;
 import java.util.Comparator;
 
 /**
- *
- * @author p1401687
+ * Classe de sommets. C'est une aggrégation de la classe de graphes : un graphe
+ * va contenir une liste de sommets.
+ * @author Loïc Cherel, Thomas Raynaud
  */
 public class Vertex implements Serializable, Comparator<Vertex> {
 
     private List<Vertex> _lNeighbour;
-
+    //Liste des voisins du sommet.
     private int _color;
+    //Couleur du sommet.
     private int _name;
+    //Nom du sommet. Chaque sommet a un nom unique.
+    
 
+    /**
+     * Constructeur de sommets.
+     * @param name Nom attribué au sommet construit.
+     */
     public Vertex(int name) {
         _lNeighbour = new ArrayList<>();
         _color = -1;
         _name = name;
     }
 
-    public int getName() {
-        return _name;
-    }
-
-    public void setName(int name) {
-        _name = name;
-    }
-
-    public int getColor() {
-        return _color;
-    }
-
-    public void setColor(int color) {
-        this._color = color;
+    /**
+     * Ajouter une arête entre le sommet sur lequel on est et le sommet b. Méthode
+     * utilisée lors de la génération du graphe.
+     * @param b Le voisin que l'on souhaite relier.
+     */
+    void addNeighbour(Vertex b) {
+        if (!_lNeighbour.contains(b)) {
+            this._lNeighbour.add(b);
+        }
     }
 
     /**
-     * @description : permet de savoir le degré du sommet
-     * @return
+     * Méthode qui analyse si deux sommets sont voisins ou non.
+     * @param nameVertex Nom du sommet pour lequel on vérifie le lien de voisinnage.
+     * @return Vrai si les deux sommets sont voisins, faux sinon.
      */
-    public int getDegre() {
-        return this._lNeighbour.size();
+    boolean isNeighbour(int nameVertex) {
+        for (int i = 0; i < this._lNeighbour.size(); i++) {
+            if (nameVertex == this._lNeighbour.get(i).getName()) {
+                return true;
+            }
+        }
+        return false;
     }
-
+    
+    /**
+     * Vérifier que deux sommets sont égaux.
+     * @param obj Le sommet à comparer.
+     * @return Vrai si les deux sommets sont égaux, faux sinon.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -63,26 +77,11 @@ public class Vertex implements Serializable, Comparator<Vertex> {
         }
         return true;
     }
-
-    public List<Vertex> getNeighbours() {
-        return _lNeighbour;
-    }
-
-    void addNeighbour(Vertex b) {
-        if (!_lNeighbour.contains(b)) {
-            this._lNeighbour.add(b);
-        }
-    }
-
-    boolean isNeighbour(int nameVertex) {
-        for (int i = 0; i < this._lNeighbour.size(); i++) {
-            if (nameVertex == this._lNeighbour.get(i).getName()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    
+    /**
+     * Afficher le sommet avec ses voisins.
+     * @return L'affichage su sommet.
+     */
     @Override
     public String toString() {
         String vertex = "";
@@ -124,9 +123,43 @@ public class Vertex implements Serializable, Comparator<Vertex> {
         return vertex;
     }
 
+    /**
+     * Comparer deux sommets en fonction du nombre de leurs voisins.
+     * @param v1 Le premier sommet à comparer.
+     * @param v2 Le deuxième sommet à comparer.
+     * @return 0 si les deux sommets on le même nombre de voisins, un nombre négatif
+     *  si v1 a moins de voisins que v2, un nombre positif sinon.
+     */
     @Override
     public int compare(Vertex v1, Vertex v2) {
         return v1._lNeighbour.size() - v2._lNeighbour.size();
     }
+    
+    /**
+     * Permet de connaître le degré du sommet.
+     * @return le degré su sommet.
+     */
+    public int getDegre() {
+        return this._lNeighbour.size();
+    }
+    
+    public List<Vertex> getNeighbours() {
+        return _lNeighbour;
+    }
+    
+    public int getName() {
+        return _name;
+    }
 
+    public void setName(int name) {
+        _name = name;
+    }
+
+    public int getColor() {
+        return _color;
+    }
+
+    public void setColor(int color) {
+        this._color = color;
+    }
 }

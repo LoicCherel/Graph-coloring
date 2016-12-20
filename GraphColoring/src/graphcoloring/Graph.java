@@ -25,7 +25,8 @@ import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
- *
+ * Classe générique de graphes. Elle contient des méthodes et attributs utilisables
+ * pour la classe GraphARS et WelshPowell
  * @author: Loïc Cherel, Thomas Raynaud, Wilians Rodulfo
  */
 public class Graph implements Serializable {
@@ -36,7 +37,7 @@ public class Graph implements Serializable {
     //Nombre de couleurs avec une occurence supérieure à zéro (couleurs existantes)
 
     public Graph() {
-        _lVertices = new ArrayList<Vertex>();
+        _lVertices = new ArrayList<>();
     }
 
     /**
@@ -45,7 +46,7 @@ public class Graph implements Serializable {
      */
     public Graph(int numberOfVertices) {
         Random rn = new Random();
-        _lVertices = new ArrayList<Vertex>();
+        _lVertices = new ArrayList<>();
         int a;
         float threshold = ((float)numberOfVertices / (float)(numberOfVertices + 4 ));
         float prop;
