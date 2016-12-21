@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Comparator;
 
 /**
- * Classe de sommets. C'est une aggrégation de la classe de graphes : un graphe
+ * Classe de sommets. C'est une agrégation de la classe de graphes : un graphe
  * va contenir une liste de sommets.
  * @author Loïc Cherel, Thomas Raynaud
  */

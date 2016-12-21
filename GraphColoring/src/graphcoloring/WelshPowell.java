@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  *
- * @author Wilians Rodulfo P1610880
+ * @author Loïc Cherel, Wilians Rodulfo
  *
  * In this case the vertices are sorted from highest to lowest grade is based on
  * the number of adjacent vertices Dans ce Algot, les sommets sont classés par
